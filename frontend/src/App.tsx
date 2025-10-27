@@ -3,7 +3,7 @@
  */
 
 import { Database } from 'lucide-react';
-import MigrationsPage from './components/MigrationsPage';
+import Dashboard from './components/Dashboard';
 
 function App() {
   return (
@@ -25,7 +25,7 @@ function App() {
 
       {/* Main Content */}
       <main>
-        <MigrationsPage />
+        <Dashboard />
       </main>
 
       {/* Footer */}
