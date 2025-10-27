@@ -1,8 +1,8 @@
-# Architecture & Design Patterns
+# Архитектура и паттерны проектирования
 
-## System Architecture
+## Системная архитектура
 
-### High-Level Overview
+### Обзор высокого уровня
 ```
 ┌─────────────────────────────────────────┐
 │  React Frontend (Port 3000)             │
@@ -25,28 +25,28 @@
 └──────────────────────────────────────────┘
 ```
 
-## Backend Architecture Patterns
+## Паттерны архитектуры Backend
 
-### 1. Layered Architecture
+### 1. Слоистая архитектура
 
-**Router Layer** → **Service Layer** → **Model Layer** → **Database**
+**Слой Router** → **Слой Service** → **Слой Model** → **База данных**
 
 ```python
 # Router (app/routers/alembic.py)
-# Handles HTTP requests, validation, responses
+# Обрабатывает HTTP-запросы, валидацию, ответы
 @router.get("/migrations")
 async def get_migrations() -> list[MigrationInfo]:
     return await alembic_service.get_history()
 
 # Service (app/services/alembic_service.py)
-# Business logic, Alembic integration
+# Бизнес-логика, интеграция с Alembic
 class AlembicService:
     def get_history(self) -> list[MigrationInfo]:
-        # Complex logic here
+        # Сложная логика здесь
         pass
 
 # Models (app/models/)
-# SQLAlchemy ORM models
+# ORM-модели SQLAlchemy
 class User(Base):
     __tablename__ = "users"
     # ...
@@ -72,15 +72,15 @@ async def get_migrations(
     return service.get_history()
 ```
 
-### 3. Pydantic for Data Validation
+### 3. Pydantic для валидации данных
 
 ```python
-# Request models
+# Модели запросов
 class UpgradeRequest(BaseModel):
     revision: Optional[str] = "head"
     sql_mode: bool = False
 
-# Response models
+# Модели ответов
 class MigrationInfo(BaseModel):
     revision: str
     message: str
@@ -89,26 +89,26 @@ class MigrationInfo(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 ```
 
-### 4. Async/Await Throughout
+### 4. Async/Await повсюду
 
 ```python
-# All I/O operations async
+# Все операции ввода-вывода асинхронные
 async def get_user(session: AsyncSession, user_id: int) -> Optional[User]:
     result = await session.execute(
         select(User).where(User.id == user_id)
     )
     return result.scalar_one_or_none()
 
-# Use asyncio.gather for parallel operations
+# Используйте asyncio.gather для параллельных операций
 users, posts = await asyncio.gather(
     get_users(),
     get_posts(),
 )
 ```
 
-## Frontend Architecture Patterns
+## Паттерны архитектуры Frontend
 
-### 1. Component-Based Architecture
+### 1. Компонентная архитектура
 
 ```
 MigrationsPage (Container)
@@ -120,10 +120,10 @@ MigrationsPage (Container)
 └── StatusBar (Presentational)
 ```
 
-**Container Components**: Manage state, data fetching
-**Presentational Components**: Pure UI, receive props
+**Container Components**: Управляют состоянием, загрузкой данных
+**Presentational Components**: Чистый UI, получают props
 
-### 2. Custom Hooks for Logic Reuse
+### 2. Пользовательские хуки для переиспользования логики
 
 ```typescript
 // hooks/useMigrations.ts
@@ -133,21 +133,21 @@ export const useMigrations = () => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchMigrations = async () => {
-    // Logic here
+    // Логика здесь
   };
 
   const applyMigration = async (revision: string) => {
-    // Logic here
+    // Логика здесь
   };
 
   return { migrations, loading, error, applyMigration };
 };
 
-// Usage in component
+// Использование в компоненте
 const { migrations, applyMigration } = useMigrations();
 ```
 
-### 3. Service Layer for API Calls
+### 3. Сервисный слой для API-вызовов
 
 ```typescript
 // services/api.ts
@@ -163,7 +163,7 @@ export const migrationApi = {
 };
 ```
 
-### 4. Type-Safe API Client
+### 4. Типобезопасный API-клиент
 
 ```typescript
 // types/api.ts
@@ -176,17 +176,17 @@ export interface ApiError {
   detail: string;
 }
 
-// Usage
+// Использование
 const response: ApiResponse<Migration[]> = await api.get('/migrations');
 ```
 
-## Project-Specific Patterns
+## Специфичные для проекта паттерны
 
-### 1. AlembicService Pattern (CORE INNOVATION ⭐)
+### 1. Паттерн AlembicService (КЛЮЧЕВАЯ ИННОВАЦИЯ ⭐)
 
-**Problem**: Alembic is CLI-only, hard to integrate in web app
+**Проблема**: Alembic работает только через CLI, сложно интегрировать в веб-приложение
 
-**Solution**: Python API wrapper that exposes Alembic functionality programmatically
+**Решение**: Python API обертка, которая предоставляет функциональность Alembic программно
 
 ```python
 from alembic import command
@@ -199,7 +199,7 @@ class AlembicService:
         self.script = ScriptDirectory.from_config(self.config)
 
     def get_history(self) -> list[MigrationInfo]:
-        """Get all migrations via Alembic Python API."""
+        """Получение всех миграций через Python API Alembic."""
         revisions = list(self.script.walk_revisions())
         current = self.get_current_revision()
 
@@ -214,52 +214,52 @@ class AlembicService:
         ]
 
     def upgrade(self, revision: str = "head") -> None:
-        """Apply migrations using Alembic command API."""
+        """Применение миграций используя command API Alembic."""
         command.upgrade(self.config, revision)
 
     def downgrade(self, revision: str) -> None:
-        """Rollback migrations using Alembic command API."""
+        """Откат миграций используя command API Alembic."""
         command.downgrade(self.config, revision)
 ```
 
-**Why this matters**:
-- Direct Python API access (no subprocess calls)
-- Type-safe return values
-- Proper error handling
-- Testable without Alembic CLI
+**Почему это важно**:
+- Прямой доступ к Python API (без вызова subprocess)
+- Типобезопасные возвращаемые значения
+- Корректная обработка ошибок
+- Тестируемость без CLI Alembic
 
-### 2. Sidecar Pattern for User Projects
+### 2. Паттерн Sidecar для пользовательских проектов
 
-**Problem**: Users want to use UI with their existing projects
+**Проблема**: Пользователи хотят использовать UI с их существующими проектами
 
-**Solution**: Mount user project as Docker volume
+**Решение**: Монтирование пользовательского проекта как Docker volume
 
 ```yaml
 # docker-compose.yml
 services:
   backend:
     volumes:
-      - ./example_project:/user-project:ro  # Read-only mount
+      - ./example_project:/user-project:ro  # Монтирование только для чтения
     environment:
       - ALEMBIC_CONFIG=/user-project/alembic.ini
 ```
 
-**Benefits**:
-- No code changes needed in user project
-- Isolated environments
-- Works with any SQLAlchemy + Alembic project
+**Преимущества**:
+- Не требуются изменения кода в пользовательском проекте
+- Изолированные окружения
+- Работает с любым проектом SQLAlchemy + Alembic
 
-### 3. Zero-Config Philosophy
+### 3. Философия нулевой конфигурации
 
-**Principle**: Application должно работать без configuration files
+**Принцип**: Приложение должно работать без конфигурационных файлов
 
-**Implementation**:
+**Реализация**:
 ```python
 # app/config.py
 from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
-    # Defaults that "just work"
+    # Значения по умолчанию, которые "просто работают"
     database_url: str = "postgresql://pguser:pgpass@db:5432/pgadmin"
     alembic_config_path: str = "/app/alembic.ini"
     cors_origins: list[str] = ["http://localhost:3000"]
@@ -271,43 +271,43 @@ class Settings(BaseSettings):
 settings = Settings()
 ```
 
-**Result**: `docker-compose up` и всё работает
+**Результат**: `docker-compose up` и всё работает
 
-### 4. API-First Design
+### 4. API-первый дизайн
 
-**Principle**: Backend = pure API, frontend = pure client
+**Принцип**: Backend = чистый API, frontend = чистый клиент
 
 ```python
-# Backend exposes OpenAPI
+# Backend предоставляет OpenAPI
 app = FastAPI(
     title="PostgreSQL Admin Dashboard API",
-    description="REST API for Alembic migrations management",
+    description="REST API для управления миграциями Alembic",
     version="0.1.0",
     docs_url="/docs",  # Swagger UI
     redoc_url="/redoc", # ReDoc
 )
 ```
 
-**Benefits**:
-- API docs auto-generated
-- Easy to test (curl, Postman)
-- Frontend can be replaced
-- Mobile app possible
+**Преимущества**:
+- Документация API генерируется автоматически
+- Легко тестировать (curl, Postman)
+- Frontend можно заменить
+- Возможно мобильное приложение
 
-## Error Handling Strategy
+## Стратегия обработки ошибок
 
-### Backend Errors
+### Ошибки Backend
 ```python
-# Custom exception types
+# Пользовательские типы исключений
 class AlembicError(Exception):
-    """Base exception for Alembic operations."""
+    """Базовое исключение для операций Alembic."""
     pass
 
 class MigrationNotFoundError(AlembicError):
-    """Raised when migration revision doesn't exist."""
+    """Вызывается когда ревизия миграции не существует."""
     pass
 
-# Convert to HTTP errors at router level
+# Преобразование в HTTP ошибки на уровне router
 @router.post("/upgrade")
 async def upgrade(request: UpgradeRequest):
     try:
@@ -319,9 +319,9 @@ async def upgrade(request: UpgradeRequest):
         raise HTTPException(status_code=500, detail=str(e))
 ```
 
-### Frontend Errors
+### Ошибки Frontend
 ```typescript
-// Centralized error handling
+// Централизованная обработка ошибок
 const handleApiError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
     return error.response?.data?.detail || 'API request failed';
@@ -329,7 +329,7 @@ const handleApiError = (error: unknown): string => {
   return 'An unexpected error occurred';
 };
 
-// Usage
+// Использование
 try {
   await api.upgradeMigrations();
 } catch (error) {
@@ -337,11 +337,11 @@ try {
 }
 ```
 
-## Performance Patterns
+## Паттерны производительности
 
-### 1. Connection Pooling
+### 1. Пул соединений
 ```python
-# SQLAlchemy async engine with pooling
+# SQLAlchemy async engine с пулом соединений
 engine = create_async_engine(
     settings.database_url,
     pool_size=5,
@@ -350,17 +350,17 @@ engine = create_async_engine(
 )
 ```
 
-### 2. Caching Strategy
+### 2. Стратегия кэширования
 ```python
 from functools import lru_cache
 
-# Cache Alembic config (expensive to create)
+# Кэширование конфигурации Alembic (дорого создавать)
 @lru_cache(maxsize=1)
 def get_alembic_config() -> Config:
     return Config("alembic.ini")
 ```
 
-### 3. Pagination (Planned)
+### 3. Пагинация (Запланировано)
 ```python
 @router.get("/migrations")
 async def get_migrations(
@@ -370,16 +370,16 @@ async def get_migrations(
     return service.get_history(skip=skip, limit=limit)
 ```
 
-## Security Considerations
+## Соображения безопасности
 
-### Current POC Level
-- ⚠️ No authentication (local development only)
-- ⚠️ No rate limiting
-- ⚠️ CORS open for localhost
+### Текущий уровень POC
+- ⚠️ Нет аутентификации (только локальная разработка)
+- ⚠️ Нет ограничения скорости запросов
+- ⚠️ CORS открыт для localhost
 
-### Production Requirements
+### Требования для продакшена
 ```python
-# Add authentication
+# Добавить аутентификацию
 from fastapi import Security
 from fastapi.security import HTTPBearer
 
@@ -389,10 +389,10 @@ security = HTTPBearer()
 async def upgrade(
     credentials: HTTPAuthorizationCredentials = Security(security)
 ):
-    # Verify JWT token
+    # Проверка JWT токена
     pass
 
-# Add rate limiting
+# Добавить ограничение скорости запросов
 from slowapi import Limiter
 
 limiter = Limiter(key_func=lambda request: request.client.host)
@@ -403,9 +403,9 @@ async def get_migrations():
     pass
 ```
 
-## Testing Strategy
+## Стратегия тестирования
 
-### Backend Tests (Planned)
+### Тесты Backend (Запланировано)
 ```python
 # tests/test_alembic_service.py
 import pytest
@@ -421,7 +421,7 @@ async def test_get_history(service):
     assert len(history) >= 0
 ```
 
-### Frontend Tests (Planned)
+### Тесты Frontend (Запланировано)
 ```typescript
 // components/__tests__/MigrationItem.test.tsx
 import { render, screen } from '@testing-library/react';
@@ -441,16 +441,16 @@ test('renders migration info', () => {
 });
 ```
 
-## Documentation Pattern
+## Паттерн документирования
 
-**Every feature follows**: Backlog → Implementation → Spec → CHANGELOG → Journal
+**Каждая функция следует**: Backlog → Implementation → Spec → CHANGELOG → Journal
 
 ```
 1. /new-feature database-browser
-2. Implement the feature
+2. Реализовать функцию
 3. /create-spec database-browser
 4. /log-change
 5. /log-dev
 ```
 
-Detailed architecture docs: `@docs/architecture/system-overview.md`
+Детальная документация архитектуры: `@docs/architecture/system-overview.md`

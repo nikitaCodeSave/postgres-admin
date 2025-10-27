@@ -1,216 +1,216 @@
-# Development Commands Reference
+# Справочник команд разработки
 
-## Docker Commands (Primary Method)
+## Команды Docker (Основной метод)
 
-### Full Stack
+### Полный стек
 ```bash
-# Start all services (recommended)
+# Запустить все сервисы (рекомендуется)
 docker-compose up --build
 
-# Start in detached mode
+# Запустить в фоновом режиме
 docker-compose up -d
 
-# Stop all services
+# Остановить все сервисы
 docker-compose down
 
-# Stop and remove volumes
+# Остановить и удалить тома
 docker-compose down -v
 
-# View logs
+# Просмотреть логи
 docker-compose logs -f [service-name]
 
-# Rebuild specific service
+# Пересобрать конкретный сервис
 docker-compose up --build backend
 docker-compose up --build frontend
 ```
 
-### Access Services
+### Доступ к сервисам
 ```bash
 # Frontend: http://localhost:3000
 # Backend API: http://localhost:8000
-# API Docs (Swagger): http://localhost:8000/docs
+# Документация API (Swagger): http://localhost:8000/docs
 # PostgreSQL: localhost:5432
 ```
 
-## Backend Commands (Local Development)
+## Команды Backend (Локальная разработка)
 
-### Setup
+### Настройка
 ```bash
 cd backend
 
-# Install dependencies
+# Установить зависимости
 poetry install
 
-# Activate virtual environment
+# Активировать виртуальное окружение
 poetry shell
 ```
 
-### Run Server
+### Запуск сервера
 ```bash
-# Development server with hot reload
+# Сервер разработки с горячей перезагрузкой
 poetry run python -m app.main
 
-# Or with uvicorn directly
+# Или напрямую через uvicorn
 poetry run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-### Testing
+### Тестирование
 ```bash
-# Run all tests
+# Запустить все тесты
 poetry run pytest
 
-# Run with coverage
+# Запустить с покрытием
 poetry run pytest --cov=app --cov-report=html
 
-# Run specific test file
+# Запустить конкретный тестовый файл
 poetry run pytest tests/test_alembic_service.py
 
-# Run with verbose output
+# Запустить с подробным выводом
 poetry run pytest -v
 ```
 
-### Code Quality
+### Качество кода
 ```bash
-# Format code (Black)
+# Форматирование кода (Black)
 poetry run black app/
 
-# Lint code (Ruff)
+# Проверка кода (Ruff)
 poetry run ruff check app/
 
-# Auto-fix linting issues
+# Автоматическое исправление ошибок линтера
 poetry run ruff check --fix app/
 
-# Type checking (when added)
+# Проверка типов (когда добавлено)
 poetry run mypy app/
 ```
 
-### Database Migrations
+### Миграции базы данных
 ```bash
-# Go to example project
+# Перейти в пример проекта
 cd ../example_project
 
-# Create new migration
+# Создать новую миграцию
 alembic revision --autogenerate -m "description"
 
-# Apply migrations
+# Применить миграции
 alembic upgrade head
 
-# Rollback one migration
+# Откатить одну миграцию
 alembic downgrade -1
 
-# Show current revision
+# Показать текущую ревизию
 alembic current
 
-# Show migration history
+# Показать историю миграций
 alembic history --verbose
 ```
 
-## Frontend Commands (Local Development)
+## Команды Frontend (Локальная разработка)
 
-### Setup
+### Настройка
 ```bash
 cd frontend
 
-# Install dependencies
+# Установить зависимости
 npm install
 
-# Or with specific registry
+# Или с указанием реестра
 npm install --registry=https://registry.npmjs.org/
 ```
 
-### Run Dev Server
+### Запуск сервера разработки
 ```bash
-# Development server with HMR
+# Сервер разработки с HMR
 npm run dev
 
-# Opens at http://localhost:3000
+# Открывается на http://localhost:3000
 ```
 
-### Build
+### Сборка
 ```bash
-# Production build
+# Продакшн сборка
 npm run build
 
-# Preview production build locally
+# Предпросмотр продакшн сборки локально
 npm run preview
 ```
 
-### Code Quality
+### Качество кода
 ```bash
-# Lint TypeScript/React
+# Проверка TypeScript/React
 npm run lint
 
-# Fix auto-fixable issues
+# Исправить автоматически исправляемые ошибки
 npm run lint --fix
 
-# Type check
+# Проверка типов
 npx tsc --noEmit
 ```
 
-### Testing (Planned)
+### Тестирование (Планируется)
 ```bash
-# Run unit tests
+# Запустить юнит-тесты
 npm test
 
-# Run tests in watch mode
+# Запустить тесты в режиме наблюдения
 npm run test:watch
 
-# Run with coverage
+# Запустить с покрытием
 npm run test:coverage
 ```
 
-## Database Commands
+## Команды базы данных
 
-### PostgreSQL CLI Access
+### Доступ к PostgreSQL CLI
 ```bash
-# Via Docker
+# Через Docker
 docker-compose exec db psql -U pguser -d pgadmin
 
-# Useful psql commands:
-# \dt        - list tables
-# \d table   - describe table
-# \l         - list databases
-# \q         - quit
+# Полезные команды psql:
+# \dt        - список таблиц
+# \d table   - описание таблицы
+# \l         - список баз данных
+# \q         - выход
 ```
 
-### Database Operations
+### Операции с базой данных
 ```bash
-# Backup database
+# Резервное копирование базы данных
 docker-compose exec db pg_dump -U pguser pgadmin > backup.sql
 
-# Restore database
+# Восстановление базы данных
 cat backup.sql | docker-compose exec -T db psql -U pguser pgadmin
 
-# Drop and recreate database (DANGER!)
+# Удалить и пересоздать базу данных (ОПАСНО!)
 docker-compose down -v
 docker-compose up -d db
 ```
 
-## Git Commands (Conventional Commits)
+## Команды Git (Conventional Commits)
 
-### Common Operations
+### Основные операции
 ```bash
-# Stage changes
+# Добавить изменения в индекс
 git add .
 
-# Commit (use /git-commit command for help)
+# Коммит (используйте команду /git-commit для помощи)
 git commit -m "feat(backend): add new endpoint"
 
-# Push
+# Отправить изменения
 git push origin main
 
-# Create branch
+# Создать ветку
 git checkout -b feature/new-feature
 
-# View status
+# Просмотреть статус
 git status
 
-# View diff
+# Просмотреть различия
 git diff
 git diff --staged
 ```
 
-### Conventional Commit Format
+### Формат Conventional Commit
 ```
 type(scope): subject
 
@@ -219,127 +219,127 @@ body
 footer
 ```
 
-**Types**: feat, fix, docs, style, refactor, perf, test, chore
+**Типы**: feat, fix, docs, style, refactor, perf, test, chore
 
-## Documentation Commands
+## Команды документации
 
-### Slash Commands (via Claude Code)
+### Slash-команды (через Claude Code)
 ```bash
-/new-feature        # Plan new feature in backlog
-/add-decision       # Create ADR for architectural decision
-/create-spec        # Document implemented feature
-/log-change         # Update CHANGELOG.md
-/log-dev           # Add dev journal entry
-/create-bug        # Report a bug
-/create-improvement # Propose improvement
-/git-commit        # Create conventional commit
-/create-release    # Prepare new release
-/review-docs       # Review documentation status
+/new-feature        # Спланировать новую функцию в backlog
+/add-decision       # Создать ADR для архитектурного решения
+/create-spec        # Задокументировать реализованную функцию
+/log-change         # Обновить CHANGELOG.md
+/log-dev           # Добавить запись в журнал разработки
+/create-bug        # Сообщить об ошибке
+/create-improvement # Предложить улучшение
+/git-commit        # Создать conventional commit
+/create-release    # Подготовить новый релиз
+/review-docs       # Проверить состояние документации
 ```
 
-## Monitoring & Debugging
+## Мониторинг и отладка
 
-### Logs
+### Логи
 ```bash
-# Follow all logs
+# Следить за всеми логами
 docker-compose logs -f
 
-# Follow specific service
+# Следить за конкретным сервисом
 docker-compose logs -f backend
 docker-compose logs -f frontend
 docker-compose logs -f db
 
-# Last 100 lines
+# Последние 100 строк
 docker-compose logs --tail=100 backend
 ```
 
-### Health Checks
+### Проверка работоспособности
 ```bash
-# Backend health
+# Здоровье Backend
 curl http://localhost:8000/api/alembic/health
 
-# Check migrations
+# Проверить миграции
 curl http://localhost:8000/api/alembic/status
 ```
 
-### Container Debugging
+### Отладка контейнеров
 ```bash
-# Execute command in container
+# Выполнить команду в контейнере
 docker-compose exec backend bash
 docker-compose exec frontend sh
 
-# Inspect container
+# Инспектировать контейнер
 docker-compose ps
 docker inspect <container_id>
 
-# Resource usage
+# Использование ресурсов
 docker stats
 ```
 
-## Useful Aliases (Add to ~/.bashrc or ~/.zshrc)
+## Полезные алиасы (Добавить в ~/.bashrc или ~/.zshrc)
 
 ```bash
-# Docker Compose shortcuts
+# Сокращения Docker Compose
 alias dcu="docker-compose up"
 alias dcub="docker-compose up --build"
 alias dcd="docker-compose down"
 alias dcl="docker-compose logs -f"
 alias dcr="docker-compose restart"
 
-# Poetry shortcuts
+# Сокращения Poetry
 alias pi="poetry install"
 alias pr="poetry run"
 alias pt="poetry run pytest"
 alias pb="poetry run black ."
 
-# npm shortcuts
+# Сокращения npm
 alias ni="npm install"
 alias nd="npm run dev"
 alias nb="npm run build"
 alias nt="npm test"
 ```
 
-## Quick Start Commands
+## Команды быстрого старта
 
-### First Time Setup
+### Первоначальная настройка
 ```bash
-# 1. Clone and enter project
+# 1. Клонировать и войти в проект
 git clone <repo-url>
 cd Postgresql
 
-# 2. Start everything
+# 2. Запустить всё
 docker-compose up --build
 
-# 3. Open in browser
+# 3. Открыть в браузере
 # http://localhost:3000
 ```
 
-### Daily Development
+### Ежедневная разработка
 ```bash
-# Start services
+# Запустить сервисы
 docker-compose up
 
-# Make changes to code...
+# Вносить изменения в код...
 
-# Services auto-reload!
+# Сервисы автоматически перезагружаются!
 # Backend: uvicorn --reload
 # Frontend: Vite HMR
 ```
 
-### Before Committing
+### Перед коммитом
 ```bash
-# 1. Run tests
+# 1. Запустить тесты
 cd backend && poetry run pytest
 cd frontend && npm test
 
-# 2. Format & lint
+# 2. Форматирование и проверка
 cd backend && poetry run black . && poetry run ruff check .
 cd frontend && npm run lint
 
-# 3. Update documentation
+# 3. Обновить документацию
 /log-change
 /log-dev
 
-# 4. Commit
+# 4. Коммит
 /git-commit
 ```

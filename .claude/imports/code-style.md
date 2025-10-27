@@ -1,12 +1,12 @@
-# Code Style & Conventions
+# Стиль кода и соглашения
 
 ## Python (Backend)
 
-### Formatting
-- **Black** formatter (100 characters line length)
-- **Ruff** linter (Python 3.12 target)
+### Форматирование
+- **Black** formatter (длина строки 100 символов)
+- **Ruff** linter (целевая версия Python 3.12)
 - **Type hints** обязательны для всех function signatures
-- **Docstrings** для public functions (Google style)
+- **Docstrings** для public functions (стиль Google)
 
 ```python
 from typing import Optional
@@ -15,29 +15,29 @@ async def get_migration_history(
     limit: Optional[int] = None,
     offset: int = 0
 ) -> list[MigrationInfo]:
-    """Get migration history from Alembic.
+    """Получить историю миграций из Alembic.
 
     Args:
-        limit: Maximum number of migrations to return
-        offset: Number of migrations to skip
+        limit: Максимальное количество миграций для возврата
+        offset: Количество миграций для пропуска
 
     Returns:
-        List of migration information objects
+        Список объектов с информацией о миграциях
 
     Raises:
-        AlembicError: If Alembic command fails
+        AlembicError: Если команда Alembic завершилась с ошибкой
     """
     pass
 ```
 
-### Naming Conventions
-- **snake_case** - functions, variables, file names
-- **PascalCase** - classes
-- **SCREAMING_SNAKE_CASE** - constants
-- **_leading_underscore** - private/internal methods
+### Соглашения по именованию
+- **snake_case** - функции, переменные, имена файлов
+- **PascalCase** - классы
+- **SCREAMING_SNAKE_CASE** - константы
+- **_leading_underscore** - приватные/внутренние методы
 
 ```python
-# Good
+# Правильно
 def calculate_total_amount() -> float:
     pass
 
@@ -50,42 +50,42 @@ def _internal_helper() -> None:
     pass
 ```
 
-### Import Organization
+### Организация импортов
 ```python
-# 1. Standard library
+# 1. Стандартная библиотека
 import os
 from typing import Optional
 
-# 2. Third-party
+# 2. Сторонние библиотеки
 from fastapi import APIRouter, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-# 3. Local app imports
+# 3. Локальные импорты приложения
 from app.config import settings
 from app.services.alembic_service import AlembicService
 from app.models.migration import MigrationInfo
 ```
 
-### FastAPI Patterns
+### Паттерны FastAPI
 ```python
-# Router setup
+# Настройка роутера
 router = APIRouter(prefix="/api/alembic", tags=["alembic"])
 
-# Async endpoints always
+# Всегда асинхронные эндпоинты
 @router.get("/migrations")
 async def get_migrations() -> list[MigrationInfo]:
-    """Get all migrations."""
+    """Получить все миграции."""
     return await alembic_service.get_history()
 
-# Use Pydantic models for request/response
+# Использовать Pydantic модели для запросов/ответов
 @router.post("/upgrade")
 async def upgrade_migrations(
     request: UpgradeRequest
 ) -> UpgradeResponse:
-    """Apply pending migrations."""
+    """Применить ожидающие миграции."""
     pass
 
-# HTTP exceptions for errors
+# HTTP исключения для ошибок
 if not migration_exists:
     raise HTTPException(
         status_code=404,
@@ -93,7 +93,7 @@ if not migration_exists:
     )
 ```
 
-### SQLAlchemy 2.0 Style
+### Стиль SQLAlchemy 2.0
 ```python
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -105,19 +105,19 @@ class User(Base):
     username: Mapped[str] = mapped_column(String(50), unique=True)
     email: Mapped[str] = mapped_column(String(100), unique=True)
 
-    # Relationships with type hints
+    # Связи с аннотациями типов
     posts: Mapped[list["Post"]] = relationship(back_populates="user")
 ```
 
-### Async/Await Consistency
+### Согласованность Async/Await
 ```python
-# Always async for I/O operations
+# Всегда async для операций ввода-вывода
 async def get_user(user_id: int) -> Optional[User]:
     async with get_session() as session:
         result = await session.get(User, user_id)
         return result
 
-# Use asyncio utilities when needed
+# Использовать утилиты asyncio при необходимости
 import asyncio
 results = await asyncio.gather(
     fetch_users(),
@@ -127,7 +127,7 @@ results = await asyncio.gather(
 
 ## TypeScript (Frontend)
 
-### Formatting
+### Форматирование
 - **2-space indentation** (не tabs, не 4 spaces)
 - **Semicolons** required
 - **Single quotes** для строк
@@ -146,19 +146,19 @@ export const useMigrations = (): UseMigrationsReturn => {
 };
 ```
 
-### Naming Conventions
-- **camelCase** - variables, functions, methods
-- **PascalCase** - components, classes, interfaces, types
-- **SCREAMING_SNAKE_CASE** - constants
-- **kebab-case** - file names
+### Соглашения по именованию
+- **camelCase** - переменные, функции, методы
+- **PascalCase** - компоненты, классы, интерфейсы, типы
+- **SCREAMING_SNAKE_CASE** - константы
+- **kebab-case** - имена файлов
 
 ```typescript
-// Files
+// Файлы
 migration-item.tsx
 use-migrations.ts
 api-client.ts
 
-// Code
+// Код
 interface MigrationInfo {
   revision: string;
   message: string;
@@ -175,28 +175,28 @@ export const MigrationItem: React.FC<Props> = ({ migration }) => {
 };
 ```
 
-### Import Organization
+### Организация импортов
 ```typescript
-// 1. React & external libraries
+// 1. React и внешние библиотеки
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// 2. Internal services/utils
+// 2. Внутренние сервисы/утилиты
 import { apiClient } from '../services/api';
 import { formatDate } from '../utils/date';
 
-// 3. Types
+// 3. Типы
 import type { Migration, MigrationStatus } from '../types';
 
-// 4. Styles (if separate)
+// 4. Стили (если отдельные)
 import './MigrationItem.css';
 ```
 
-### React Patterns
+### Паттерны React
 
-#### Functional Components Only
+#### Только функциональные компоненты
 ```typescript
-// ✅ Good - Functional with TypeScript
+// ✅ Правильно - Функциональный с TypeScript
 export const MigrationItem: React.FC<MigrationItemProps> = ({
   migration,
   onApply,
@@ -210,54 +210,54 @@ export const MigrationItem: React.FC<MigrationItemProps> = ({
   );
 };
 
-// ❌ Bad - Class components (not used in this project)
+// ❌ Неправильно - Классовые компоненты (не используются в этом проекте)
 class MigrationItem extends React.Component { }
 ```
 
-#### Type Safety
+#### Типобезопасность
 ```typescript
-// Define props interface
+// Определить интерфейс пропсов
 interface MigrationItemProps {
   migration: Migration;
   onApply: (revision: string) => void;
-  onRollback?: (revision: string) => void; // Optional
+  onRollback?: (revision: string) => void; // Опциональный
 }
 
-// Use type for return values
+// Использовать type для возвращаемых значений
 const useMigrations = (): UseMigrationsReturn => {
   // ...
 };
 
-// Type event handlers
+// Типизировать обработчики событий
 const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
   // ...
 };
 ```
 
-#### Hooks Best Practices
+#### Лучшие практики для хуков
 ```typescript
-// Custom hooks start with "use"
+// Пользовательские хуки начинаются с "use"
 export const useMigrations = () => {
   const [data, setData] = useState<Migration[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    // Cleanup function
+    // Функция очистки
     const abortController = new AbortController();
 
     fetchData(abortController.signal);
 
     return () => abortController.abort();
-  }, [/* dependencies */]);
+  }, [/* зависимости */]);
 
   return { data, loading, error };
 };
 ```
 
-### TailwindCSS Conventions
+### Соглашения TailwindCSS
 ```tsx
-// Use clsx for conditional classes
+// Использовать clsx для условных классов
 import clsx from 'clsx';
 
 <div className={clsx(
@@ -269,87 +269,87 @@ import clsx from 'clsx';
 )}>
 ```
 
-## File Organization
+## Организация файлов
 
-### Backend Structure
+### Структура Backend
 ```
 app/
 ├── __init__.py
-├── main.py              # FastAPI app entry
-├── config.py            # Settings (Pydantic)
-├── models/              # SQLAlchemy models
+├── main.py              # Точка входа FastAPI приложения
+├── config.py            # Настройки (Pydantic)
+├── models/              # Модели SQLAlchemy
 │   ├── __init__.py
-│   ├── base.py          # Base class
-│   └── user.py          # Individual models
-├── routers/             # API endpoints
+│   ├── base.py          # Базовый класс
+│   └── user.py          # Отдельные модели
+├── routers/             # API эндпоинты
 │   ├── __init__.py
-│   └── alembic.py       # Grouped by domain
-├── services/            # Business logic
+│   └── alembic.py       # Группировка по доменам
+├── services/            # Бизнес-логика
 │   ├── __init__.py
 │   └── alembic_service.py
-└── utils/               # Utilities
+└── utils/               # Утилиты
     ├── __init__.py
     └── helpers.py
 ```
 
-### Frontend Structure
+### Структура Frontend
 ```
 src/
-├── main.tsx             # Entry point
-├── App.tsx              # Root component
-├── components/          # React components
+├── main.tsx             # Точка входа
+├── App.tsx              # Корневой компонент
+├── components/          # React компоненты
 │   ├── MigrationsPage.tsx
 │   ├── MigrationItem.tsx
 │   └── LoadingSpinner.tsx
-├── hooks/               # Custom hooks
+├── hooks/               # Пользовательские хуки
 │   └── useMigrations.ts
-├── services/            # API clients
+├── services/            # API клиенты
 │   └── api.ts
-├── types/               # TypeScript types
+├── types/               # TypeScript типы
 │   └── migration.ts
-└── utils/               # Utility functions
+└── utils/               # Вспомогательные функции
     └── formatters.ts
 ```
 
-## Comments & Documentation
+## Комментарии и документация
 
-### When to Comment
+### Когда комментировать
 ```python
-# ✅ Good - Explain WHY, not WHAT
-# Cache migration history for 5 minutes to reduce Alembic calls
+# ✅ Правильно - Объясняй ПОЧЕМУ, а не ЧТО
+# Кэшировать историю миграций на 5 минут для уменьшения вызовов Alembic
 @lru_cache(maxsize=1)
 def get_cached_history() -> list[MigrationInfo]:
     pass
 
-# ✅ Good - Explain complex logic
-# Use Set to deduplicate while preserving order O(n) instead of list O(n²)
+# ✅ Правильно - Объясняй сложную логику
+# Использовать Set для дедупликации с сохранением порядка O(n) вместо list O(n²)
 seen = set()
 unique_items = [x for x in items if not (x in seen or seen.add(x))]
 
-# ❌ Bad - State the obvious
-# Create a variable called count
+# ❌ Неправильно - Констатация очевидного
+# Создать переменную count
 count = 0
 ```
 
 ### Docstrings (Python)
 ```python
-# Google style for consistency
+# Стиль Google для единообразия
 def process_migration(
     revision: str,
     direction: str = "up"
 ) -> MigrationResult:
-    """Process a database migration.
+    """Обработать миграцию базы данных.
 
     Args:
-        revision: Migration revision hash (e.g., "abc123")
-        direction: Direction to migrate ("up" or "down")
+        revision: Хэш ревизии миграции (например, "abc123")
+        direction: Направление миграции ("up" или "down")
 
     Returns:
-        Result object with status and affected tables
+        Объект результата со статусом и затронутыми таблицами
 
     Raises:
-        AlembicError: If migration execution fails
-        ValueError: If direction is invalid
+        AlembicError: Если выполнение миграции завершилось с ошибкой
+        ValueError: Если направление недопустимо
 
     Example:
         >>> result = process_migration("abc123", "up")
@@ -362,11 +362,11 @@ def process_migration(
 ### JSDoc (TypeScript)
 ```typescript
 /**
- * Fetch migration history from backend API
+ * Получить историю миграций из backend API
  *
- * @param limit - Maximum number of migrations to return
- * @returns Promise resolving to array of migrations
- * @throws {AxiosError} If API request fails
+ * @param limit - Максимальное количество миграций для возврата
+ * @returns Promise, разрешающийся в массив миграций
+ * @throws {AxiosError} Если API запрос завершился с ошибкой
  *
  * @example
  * ```typescript
@@ -381,20 +381,20 @@ export async function fetchMigrations(
 }
 ```
 
-## Error Handling
+## Обработка ошибок
 
 ### Backend
 ```python
 from fastapi import HTTPException
 
-# Use specific HTTP exceptions
+# Использовать специфичные HTTP исключения
 if not user:
     raise HTTPException(
         status_code=404,
         detail="User not found"
     )
 
-# Catch and wrap external errors
+# Перехватывать и оборачивать внешние ошибки
 try:
     result = await alembic_service.upgrade()
 except AlembicCommandError as e:
@@ -406,7 +406,7 @@ except AlembicCommandError as e:
 
 ### Frontend
 ```typescript
-// Use try-catch for async operations
+// Использовать try-catch для асинхронных операций
 try {
   const migrations = await api.getMigrations();
   setMigrations(migrations);
@@ -419,14 +419,14 @@ try {
 }
 ```
 
-## Code Review Checklist
+## Чеклист code review
 
-**Before Committing**:
-- [ ] Code formatted (Black/ESLint)
-- [ ] No linting errors (Ruff/ESLint)
-- [ ] Type hints added (Python)
-- [ ] Types defined (TypeScript)
-- [ ] Tests pass (pytest/vitest)
-- [ ] No console.log/print statements
-- [ ] Comments explain WHY, not WHAT
-- [ ] Imports organized correctly
+**Перед коммитом**:
+- [ ] Код отформатирован (Black/ESLint)
+- [ ] Нет ошибок линтера (Ruff/ESLint)
+- [ ] Добавлены type hints (Python)
+- [ ] Определены типы (TypeScript)
+- [ ] Тесты проходят (pytest/vitest)
+- [ ] Нет console.log/print выражений
+- [ ] Комментарии объясняют ПОЧЕМУ, а не ЧТО
+- [ ] Импорты организованы правильно

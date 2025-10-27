@@ -1,83 +1,83 @@
-# Technology Stack & Versions
+# Технологический стек и версии
 
-## Backend Stack
+## Backend стек
 
-### Core Framework
-- **FastAPI** ^0.119.1 - Modern async web framework
-- **Python** ^3.12 - Language version
-- **Uvicorn** ^0.38.0 - ASGI server with hot reload
+### Основной фреймворк
+- **FastAPI** ^0.119.1 - Современный async web-фреймворк
+- **Python** ^3.12 - Версия языка
+- **Uvicorn** ^0.38.0 - ASGI сервер с hot reload
 
-### Database & ORM
-- **SQLAlchemy** ^2.0.44 - ORM с async support (2.0 style)
-- **Alembic** ^1.17.0 - Database migrations
-- **asyncpg** ^0.30.0 - Fastest async PostgreSQL driver
-- **PostgreSQL** 17 - Database (official Docker image: postgres:17-alpine)
+### База данных и ORM
+- **SQLAlchemy** ^2.0.44 - ORM с async поддержкой (стиль 2.0)
+- **Alembic** ^1.17.0 - Миграции базы данных
+- **asyncpg** ^0.30.0 - Самый быстрый async драйвер PostgreSQL
+- **PostgreSQL** 17 - База данных (официальный Docker образ: postgres:17-alpine)
 
-### Data Validation
-- **Pydantic** ^2.12.3 - Data validation и settings
-- **pydantic-settings** ^2.11.0 - Configuration management
+### Валидация данных
+- **Pydantic** ^2.12.3 - Валидация данных и настройки
+- **pydantic-settings** ^2.11.0 - Управление конфигурацией
 
-### Development Tools
-- **Poetry** - Dependency management и packaging
-- **pytest** ^8.4.2 - Testing framework
-- **pytest-asyncio** ^1.2.0 - Async tests support
-- **Black** ^25.9.0 - Code formatter (100 chars)
-- **Ruff** ^0.14.2 - Fast linter
+### Инструменты разработки
+- **Poetry** - Управление зависимостями и packaging
+- **pytest** ^8.4.2 - Фреймворк для тестирования
+- **pytest-asyncio** ^1.2.0 - Поддержка async тестов
+- **Black** ^25.9.0 - Форматтер кода (100 символов)
+- **Ruff** ^0.14.2 - Быстрый линтер
 
-## Frontend Stack
+## Frontend стек
 
-### Core Framework
-- **React** ^18.2.0 - UI library
+### Основной фреймворк
+- **React** ^18.2.0 - UI библиотека
 - **TypeScript** ^5.2.2 - Type-safe JavaScript
-- **Vite** ^5.0.0 - Build tool с HMR
+- **Vite** ^5.0.0 - Инструмент сборки с HMR
 
-### Styling
+### Стилизация
 - **TailwindCSS** ^3.3.5 - Utility-first CSS
-- **PostCSS** ^8.4.31 - CSS processing
+- **PostCSS** ^8.4.31 - Обработка CSS
 - **Autoprefixer** ^10.4.16 - CSS vendor prefixes
 
-### HTTP & State
-- **Axios** ^1.6.0 - HTTP client
-- **React Context API** - State management (no Redux yet)
+### HTTP и State
+- **Axios** ^1.6.0 - HTTP клиент
+- **React Context API** - Управление состоянием (пока без Redux)
 
-### UI Components
-- **Lucide React** ^0.294.0 - Icon library
-- **clsx** ^2.0.0 - Conditional classnames
+### UI компоненты
+- **Lucide React** ^0.294.0 - Библиотека иконок
+- **clsx** ^2.0.0 - Условные CSS классы
 
-### Development Tools
-- **ESLint** ^8.53.0 - Linting
+### Инструменты разработки
+- **ESLint** ^8.53.0 - Линтинг
 - **@typescript-eslint** ^6.10.0 - TypeScript ESLint
-- **Vitest** (planned) - Unit testing
+- **Vitest** (запланировано) - Unit тестирование
 
-## DevOps Stack
+## DevOps стек
 
-### Containerization
-- **Docker** 24+ - Container platform
-- **Docker Compose** - Multi-container orchestration
+### Контейнеризация
+- **Docker** 24+ - Платформа контейнеризации
+- **Docker Compose** - Оркестрация multi-container
 
-### Services
+### Сервисы
 - **PostgreSQL** 17 (postgres:17-alpine)
-- **Backend** (FastAPI on port 8000)
-- **Frontend** (Vite dev on port 3000)
+- **Backend** (FastAPI на порту 8000)
+- **Frontend** (Vite dev на порту 3000)
 
-### Ports
+### Порты
 - `5432` - PostgreSQL
 - `8000` - Backend API
-- `3000` - Frontend dev server
+- `3000` - Frontend dev сервер
 
-## Package Managers
+## Пакетные менеджеры
 
 ### Backend
-- **Poetry** - Modern Python dependency management
-  - `pyproject.toml` - Dependencies и config
-  - Lock file для reproducible builds
+- **Poetry** - Современное управление зависимостями Python
+  - `pyproject.toml` - Зависимости и конфигурация
+  - Lock file для воспроизводимых сборок
 
 ### Frontend
-- **npm** - Node.js package manager
-  - `package.json` - Dependencies
+- **npm** - Пакетный менеджер Node.js
+  - `package.json` - Зависимости
   - `package-lock.json` - Lock file
 
-## Python Configuration (pyproject.toml)
+## Конфигурация Python (pyproject.toml)
 
 ```toml
 [tool.poetry.dependencies]
@@ -100,7 +100,7 @@ line-length = 100
 target-version = "py312"
 ```
 
-## TypeScript Configuration (tsconfig.json)
+## Конфигурация TypeScript (tsconfig.json)
 
 ```json
 {
@@ -115,9 +115,9 @@ target-version = "py312"
 }
 ```
 
-## Important Version Notes
+## Важные заметки о версиях
 
-### SQLAlchemy 2.0 Style
+### Стиль SQLAlchemy 2.0
 Используем новый declarative syntax с typed mapping:
 ```python
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -132,22 +132,22 @@ class User(Base):
 ```
 
 ### FastAPI Async
-Все endpoints async с async/await:
+Все endpoints асинхронные с async/await:
 ```python
 @router.get("/migrations")
 async def get_migrations() -> list[MigrationInfo]:
     return await alembic_service.get_history()
 ```
 
-### React 18 Features
-- Automatic batching
-- Concurrent features
-- New hooks (useId, useTransition)
-- Strict mode in development
+### Возможности React 18
+- Автоматический batching
+- Concurrent фичи
+- Новые хуки (useId, useTransition)
+- Strict mode в разработке
 
-## Dependency Upgrade Strategy
+## Стратегия обновления зависимостей
 
-**Check for updates**:
+**Проверка обновлений**:
 ```bash
 # Backend
 cd backend && poetry show --outdated
@@ -156,13 +156,13 @@ cd backend && poetry show --outdated
 cd frontend && npm outdated
 ```
 
-**Critical packages to watch**:
-- FastAPI (major releases могут иметь breaking changes)
+**Критические пакеты для отслеживания**:
+- FastAPI (major релизы могут содержать breaking changes)
 - SQLAlchemy (2.x → 3.x в будущем)
-- React (18.x → 19.x planned)
+- React (18.x → 19.x запланировано)
 - TailwindCSS (следить за 4.0)
 
-**Update policy**:
-- Patch versions: auto-update
-- Minor versions: review changelog, test
-- Major versions: plan migration, update ADR
+**Политика обновлений**:
+- Patch версии: автообновление
+- Minor версии: просмотр changelog, тестирование
+- Major версии: планирование миграции, обновление ADR

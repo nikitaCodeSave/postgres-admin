@@ -1,428 +1,428 @@
-# PostgreSQL Admin Dashboard - Claude Code Configuration
+# PostgreSQL Admin Dashboard - Конфигурация Claude Code
 
-> This file provides context about the project for Claude Code AI assistant.
-> It's automatically loaded at the start of each coding session.
+> Этот файл предоставляет контекст проекта для AI-ассистента Claude Code.
+> Он автоматически загружается в начале каждой сессии кодирования.
 
-**Version**: v0.1.0 (POC → MVP)
-**Last Updated**: 2025-10-27
+**Версия**: v0.1.0 (POC → MVP)
+**Последнее обновление**: 2025-10-27
 
 ---
 
-## 📋 Quick Reference
+## 📋 Быстрый справочник
 
-### Essential Commands
+### Основные команды
 ```bash
-# Start full stack
+# Запуск полного стека
 docker-compose up --build
 
-# Backend local dev
+# Локальная разработка backend
 cd backend && poetry run python -m app.main
 
-# Frontend local dev
+# Локальная разработка frontend
 cd frontend && npm run dev
 
-# Run tests
+# Запуск тестов
 poetry run pytest          # Backend
-npm test                   # Frontend (planned)
+npm test                   # Frontend (запланировано)
 
-# Code quality
+# Качество кода
 poetry run black . && poetry run ruff check .    # Backend
 npm run lint                                       # Frontend
 ```
 
-### Key Files
+### Ключевые файлы
 - **Backend Core**: `backend/app/services/alembic_service.py` (AlembicService ⭐)
 - **Frontend Core**: `frontend/src/components/MigrationsPage.tsx` (Visual UI ⭐)
-- **Documentation**: `docs/` (ADR, specs, backlog, dev-journal, architecture)
-- **Commands**: `.claude/commands/` (10 slash commands)
-- **Subagent**: `.claude/agents/postgres-python-expert.md`
+- **Документация**: `docs/` (ADR, спецификации, беклог, dev-журнал, архитектура)
+- **Команды**: `.claude/commands/` (10 slash-команд)
+- **Субагент**: `.claude/agents/postgres-python-expert.md`
 
-### Slash Commands Quick List
-- `/new-feature` - Plan feature → `/add-decision` - Document decision
-- `/create-spec` - Document feature → `/log-change` - Update CHANGELOG
-- `/log-dev` - Dev journal → `/review-docs` - Documentation review
-- `/create-bug` - Report bug → `/create-improvement` - Propose improvement
-- `/git-commit` - Conventional commit → `/create-release` - Prepare release
+### Быстрый список Slash-команд
+- `/new-feature` - Планирование фичи → `/add-decision` - Документирование решения
+- `/create-spec` - Документирование фичи → `/log-change` - Обновление CHANGELOG
+- `/log-dev` - Dev-журнал → `/review-docs` - Обзор документации
+- `/create-bug` - Сообщить о баге → `/create-improvement` - Предложить улучшение
+- `/git-commit` - Conventional commit → `/create-release` - Подготовить релиз
 
 ---
 
-## 📦 Complete Project Context (via Imports)
+## 📦 Полный контекст проекта (через импорты)
 
-### Project Information
+### Информация о проекте
 @.claude/imports/project-info.md
 
-### Technology Stack & Versions
+### Технологический стек и версии
 @.claude/imports/tech-stack.md
 
-### Development Commands
+### Команды разработки
 @.claude/imports/commands.md
 
-### Code Style & Conventions
+### Стиль кода и соглашения
 @.claude/imports/code-style.md
 
-### Architecture & Design Patterns
+### Архитектура и паттерны проектирования
 @.claude/imports/architecture.md
 
-### Development Workflow
+### Рабочий процесс разработки
 @.claude/imports/workflow.md
 
 ---
 
-## 🎯 Project-Specific Guidelines
+## 🎯 Специфичные для проекта рекомендации
 
-### Core Innovation: AlembicService Pattern
+### Основная инновация: паттерн AlembicService
 
-This project's **killer feature** is the Visual Alembic UI - first GUI for Alembic in 14 years!
+**Ключевая фича** этого проекта - Visual Alembic UI - первый GUI для Alembic за 14 лет!
 
-**Key Implementation** (`backend/app/services/alembic_service.py`):
+**Ключевая реализация** (`backend/app/services/alembic_service.py`):
 ```python
 from alembic import command
 from alembic.script import ScriptDirectory
 
 class AlembicService:
-    """Python API wrapper over Alembic CLI.
+    """Обертка Python API над Alembic CLI.
 
-    This is the core innovation - exposes Alembic functionality
-    programmatically for web integration.
+    Это основная инновация - предоставляет функциональность Alembic
+    программно для веб-интеграции.
     """
     def get_history(self) -> list[MigrationInfo]:
-        # Use Alembic Python API, not CLI
+        # Используем Alembic Python API, а не CLI
         revisions = list(self.script.walk_revisions())
-        # Return structured data for frontend
+        # Возвращаем структурированные данные для frontend
 ```
 
-**Why this matters**:
-- No subprocess calls to CLI
-- Type-safe return values
-- Proper error handling
-- Testable without CLI
+**Почему это важно**:
+- Нет вызовов subprocess к CLI
+- Типобезопасные возвращаемые значения
+- Правильная обработка ошибок
+- Тестируемость без CLI
 
-**When working with AlembicService**:
-- Always use async wrappers for long operations
-- Handle all Alembic exceptions properly
-- Test with real Alembic config
-- Document any new Alembic API patterns discovered
+**При работе с AlembicService**:
+- Всегда используйте async-обертки для длительных операций
+- Правильно обрабатывайте все исключения Alembic
+- Тестируйте с реальной конфигурацией Alembic
+- Документируйте любые новые обнаруженные паттерны Alembic API
 
-### Zero-Config Philosophy
+### Философия Zero-Config
 
-**Principle**: Everything should "just work" with `docker-compose up`
+**Принцип**: Все должно "просто работать" с `docker-compose up`
 
-**Implementation**:
-- Sensible defaults in `app/config.py` (Pydantic Settings)
-- Docker Compose handles all service orchestration
-- No manual setup steps required
-- `.env.example` provided for customization
+**Реализация**:
+- Разумные значения по умолчанию в `app/config.py` (Pydantic Settings)
+- Docker Compose управляет всей оркестрацией сервисов
+- Не требуется ручных шагов настройки
+- `.env.example` предоставлен для кастомизации
 
-**When adding new features**:
-- Provide working defaults
-- Make configuration optional
-- Document env variables in `.env.example`
-- Test with zero configuration
+**При добавлении новых функций**:
+- Предоставьте рабочие значения по умолчанию
+- Сделайте конфигурацию опциональной
+- Документируйте переменные окружения в `.env.example`
+- Тестируйте с нулевой конфигурацией
 
-### Documentation-Driven Development
+### Разработка через документацию
 
-**Every feature follows this cycle**:
-1. Planning: `/new-feature` → backlog spec
-2. Architecture: `/add-decision` if significant
-3. Implementation: Write code
-4. Documentation: `/create-spec` + `/log-change` + `/log-dev`
-5. Review: `/review-docs` periodically
+**Каждая фича следует этому циклу**:
+1. Планирование: `/new-feature` → спецификация в беклоге
+2. Архитектура: `/add-decision` если значительное изменение
+3. Реализация: Написание кода
+4. Документация: `/create-spec` + `/log-change` + `/log-dev`
+5. Обзор: `/review-docs` периодически
 
-**Never skip documentation steps!**
+**Никогда не пропускайте шаги документирования!**
 
-### Visual UI First
+### UI прежде всего
 
-**Principle**: All database operations should be available through UI, not just CLI
+**Принцип**: Все операции с БД должны быть доступны через UI, а не только через CLI
 
-**Current**:
-- ✅ View migration history (UI)
-- ✅ Apply migrations (UI)
-- ✅ Rollback migrations (UI)
+**Текущее состояние**:
+- ✅ Просмотр истории миграций (UI)
+- ✅ Применение миграций (UI)
+- ✅ Откат миграций (UI)
 
-**Planned**:
-- [ ] Database browser (UI)
-- [ ] Query editor (UI)
-- [ ] Schema visualization (UI)
+**Запланировано**:
+- [ ] Браузер базы данных (UI)
+- [ ] Редактор запросов (UI)
+- [ ] Визуализация схемы (UI)
 
-**When adding features**: Always think "how would this look in UI?"
-
----
-
-## 🛠️ Current Development Context
-
-### Project Stage
-- **POC Complete** (v0.1.0) - Visual Alembic UI working
-- **MVP In Progress** (v0.2.0) - Adding Database Browser
-
-### Active Work Areas
-Check `docs/backlog/features/` for planned features
-Check `docs/backlog/bugs/` for known issues
-Check `docs/dev-journal/2025-10.md` for recent activity
-
-### Technical Debt
-- No tests yet (pytest/vitest planned for MVP)
-- No authentication (local dev only)
-- No rate limiting
-- No error boundaries in React
-- No logging infrastructure
-
-### Known Limitations (POC)
-- Single database support
-- No concurrent migration execution
-- No migration creation through UI (only apply/rollback)
-- No SQL preview
-- No migration dependency graph
+**При добавлении функций**: Всегда думайте "как это будет выглядеть в UI?"
 
 ---
 
-## 🤖 Subagent Usage
+## 🛠️ Текущий контекст разработки
+
+### Стадия проекта
+- **POC завершен** (v0.1.0) - Visual Alembic UI работает
+- **MVP в процессе** (v0.2.0) - Добавление браузера базы данных
+
+### Активные области работы
+Проверьте `docs/backlog/features/` для запланированных функций
+Проверьте `docs/backlog/bugs/` для известных проблем
+Проверьте `docs/dev-journal/2025-10.md` для недавней активности
+
+### Технический долг
+- Пока нет тестов (pytest/vitest запланированы для MVP)
+- Нет аутентификации (только локальная разработка)
+- Нет ограничения запросов
+- Нет error boundaries в React
+- Нет инфраструктуры логирования
+
+### Известные ограничения (POC)
+- Поддержка только одной базы данных
+- Нет конкурентного выполнения миграций
+- Нет создания миграций через UI (только применение/откат)
+- Нет предпросмотра SQL
+- Нет графа зависимостей миграций
+
+---
+
+## 🤖 Использование субагента
 
 ### postgres-python-expert
 
-**Invoke when**:
-- Working with SQLAlchemy models
-- Creating/modifying Alembic migrations
-- Database schema design
-- Query optimization
-- PostgreSQL-specific features
+**Вызывайте когда**:
+- Работа с моделями SQLAlchemy
+- Создание/изменение миграций Alembic
+- Проектирование схемы БД
+- Оптимизация запросов
+- Специфичные для PostgreSQL функции
 
-**Usage**:
+**Использование**:
 ```
-"Use postgres-python-expert subagent to help create SQLAlchemy model for..."
+"Используй субагент postgres-python-expert для помощи в создании модели SQLAlchemy для..."
 ```
 
-**Important**: Agent always searches web for latest versions and best practices first!
+**Важно**: Агент всегда сначала ищет в интернете последние версии и лучшие практики!
 
 ---
 
-## 📚 Documentation System
+## 📚 Система документации
 
-### Structure
+### Структура
 ```
 docs/
-├── adr/                    # Architecture Decision Records
+├── adr/                    # Записи архитектурных решений
 │   └── 0001-initial-architecture.md
-├── specs/                  # Implemented features
+├── specs/                  # Реализованные функции
 │   └── 001-visual-alembic-ui.md
-├── backlog/               # Planning
-│   ├── features/          # Future features
-│   ├── bugs/              # Known issues
-│   └── improvements/      # Enhancement ideas
-├── dev-journal/           # Development diary
+├── backlog/               # Планирование
+│   ├── features/          # Будущие функции
+│   ├── bugs/              # Известные проблемы
+│   └── improvements/      # Идеи улучшений
+├── dev-journal/           # Дневник разработки
 │   └── 2025-10.md
-├── architecture/          # System design
+├── architecture/          # Проектирование системы
 │   ├── system-overview.md
 │   ├── database-schema.md
 │   └── tech-stack.md
-└── CHANGELOG.md           # Release history
+└── CHANGELOG.md           # История релизов
 ```
 
-### When to Document What
+### Когда что документировать
 
 **ADR** (`/add-decision`):
-- Framework choices (FastAPI vs Django)
-- Architectural patterns (layered architecture)
-- Technology decisions (PostgreSQL vs MongoDB)
-- Design patterns (AlembicService pattern)
+- Выбор фреймворка (FastAPI vs Django)
+- Архитектурные паттерны (слоистая архитектура)
+- Технологические решения (PostgreSQL vs MongoDB)
+- Паттерны проектирования (паттерн AlembicService)
 
 **Spec** (`/create-spec`):
-- AFTER feature implementation
-- Detailed API documentation
-- Usage examples
-- Known limitations
+- ПОСЛЕ реализации фичи
+- Детальная документация API
+- Примеры использования
+- Известные ограничения
 
 **CHANGELOG** (`/log-change`):
-- After ANY user-facing change
-- New features (Added)
-- Bug fixes (Fixed)
-- Breaking changes (with warning)
+- После ЛЮБОГО изменения, видимого пользователю
+- Новые функции (Added)
+- Исправления багов (Fixed)
+- Критические изменения (с предупреждением)
 
 **Dev Journal** (`/log-dev`):
-- End of work session
-- Interesting problems solved
-- Experiments and findings
-- Learning notes
+- В конце рабочей сессии
+- Интересные решенные проблемы
+- Эксперименты и находки
+- Заметки об изученном
 
 ---
 
-## ⚡ Performance Guidelines
+## ⚡ Рекомендации по производительности
 
 ### Backend
-- Use async/await for all I/O operations
-- Connection pooling: 5 pool_size, 10 max_overflow
-- Cache expensive operations (Alembic config creation)
-- Lazy load relationships in SQLAlchemy
-- Pagination for large datasets (planned)
+- Используйте async/await для всех операций ввода-вывода
+- Пул соединений: 5 pool_size, 10 max_overflow
+- Кешируйте дорогие операции (создание конфигурации Alembic)
+- Ленивая загрузка отношений в SQLAlchemy
+- Пагинация для больших наборов данных (запланировано)
 
 ### Frontend
-- React 18 automatic batching
-- Lazy loading components (React.lazy + Suspense)
-- Debounce user input (search, filters)
-- Virtual scrolling for long lists (planned)
-- Image optimization (planned)
+- Автоматическое объединение React 18
+- Ленивая загрузка компонентов (React.lazy + Suspense)
+- Debounce пользовательского ввода (поиск, фильтры)
+- Виртуальная прокрутка для длинных списков (запланировано)
+- Оптимизация изображений (запланировано)
 
 ---
 
-## 🔒 Security Notes
+## 🔒 Примечания по безопасности
 
-### Current (POC - Local Only)
-- ⚠️ No authentication
-- ⚠️ No authorization
-- ⚠️ CORS open for localhost
-- ⚠️ No rate limiting
-- ⚠️ No input sanitization beyond Pydantic
+### Текущее состояние (POC - только локально)
+- ⚠️ Нет аутентификации
+- ⚠️ Нет авторизации
+- ⚠️ CORS открыт для localhost
+- ⚠️ Нет ограничения запросов
+- ⚠️ Нет санитизации ввода кроме Pydantic
 
-### Production Requirements (MVP+)
-- [ ] JWT authentication
-- [ ] Role-based access control (RBAC)
-- [ ] Rate limiting (slowapi)
-- [ ] CORS whitelist only
-- [ ] SQL injection prevention (SQLAlchemy ORM)
-- [ ] XSS prevention (React escaping)
-- [ ] HTTPS only
-- [ ] Secrets management
+### Требования для продакшена (MVP+)
+- [ ] JWT аутентификация
+- [ ] Контроль доступа на основе ролей (RBAC)
+- [ ] Ограничение запросов (slowapi)
+- [ ] CORS whitelist только
+- [ ] Предотвращение SQL injection (SQLAlchemy ORM)
+- [ ] Предотвращение XSS (экранирование React)
+- [ ] Только HTTPS
+- [ ] Управление секретами
 
-**Never commit**:
-- Passwords or API keys
-- `.env` files with real credentials
-- Database dumps with sensitive data
+**Никогда не коммитьте**:
+- Пароли или API ключи
+- `.env` файлы с реальными credentials
+- Дампы БД с чувствительными данными
 
 ---
 
-## 🎨 UI/UX Guidelines
+## 🎨 Рекомендации по UI/UX
 
-### Design System
-- **Dark theme by default** (developer tool)
-- **TailwindCSS utility classes** (no custom CSS unless necessary)
-- **Lucide React icons** (consistent icon set)
-- **Responsive design** (mobile-friendly, but desktop-focused)
+### Дизайн-система
+- **Темная тема по умолчанию** (инструмент для разработчиков)
+- **TailwindCSS утилитарные классы** (никаких пользовательских CSS без необходимости)
+- **Lucide React иконки** (согласованный набор иконок)
+- **Адаптивный дизайн** (mobile-friendly, но ориентированный на desktop)
 
-### Color Palette
+### Цветовая палитра
 ```css
-Primary: Blue (#3b82f6)
-Success: Green (#10b981)
-Warning: Yellow (#f59e0b)
-Error: Red (#ef4444)
+Primary: Синий (#3b82f6)
+Success: Зеленый (#10b981)
+Warning: Желтый (#f59e0b)
+Error: Красный (#ef4444)
 Background: Gray-900 (#111827)
 Text: Gray-100 (#f3f4f6)
 ```
 
-### Component Patterns
-- Functional components only (no class components)
-- Custom hooks for logic reuse
-- Props interfaces for type safety
-- Conditional classnames with clsx
+### Паттерны компонентов
+- Только функциональные компоненты (никаких классовых компонентов)
+- Пользовательские хуки для повторного использования логики
+- Интерфейсы Props для типобезопасности
+- Условные classnames с clsx
 
 ---
 
-## 🧪 Testing Philosophy (Planned)
+## 🧪 Философия тестирования (запланировано)
 
-### Backend Tests
+### Тесты Backend
 ```python
-# Unit tests for services
+# Unit-тесты для сервисов
 tests/unit/test_alembic_service.py
 
-# Integration tests for API
+# Интеграционные тесты для API
 tests/integration/test_alembic_endpoints.py
 
-# Run: poetry run pytest
+# Запуск: poetry run pytest
 ```
 
-### Frontend Tests
+### Тесты Frontend
 ```typescript
-// Component tests
+// Тесты компонентов
 components/__tests__/MigrationItem.test.tsx
 
-// Hook tests
+// Тесты хуков
 hooks/__tests__/useMigrations.test.ts
 
-// Run: npm test
+// Запуск: npm test
 ```
 
-### Integration Tests
+### Интеграционные тесты
 ```bash
-# Full stack with Docker
+# Полный стек с Docker
 ./scripts/run-integration-tests.sh
 ```
 
-**Test Coverage Goals**:
-- Services: 80%+
+**Цели покрытия тестами**:
+- Сервисы: 80%+
 - API endpoints: 90%+
-- Components: 70%+
-- Critical paths: 100% (AlembicService, migrations API)
+- Компоненты: 70%+
+- Критические пути: 100% (AlembicService, API миграций)
 
 ---
 
-## 🚀 Deployment (Planned)
+## 🚀 Развертывание (запланировано)
 
 ### Staging
-- Docker Compose on cloud VM
-- PostgreSQL managed service
-- CI/CD via GitHub Actions
-- Auto-deploy on push to main
+- Docker Compose на облачной VM
+- Управляемый сервис PostgreSQL
+- CI/CD через GitHub Actions
+- Авто-деплой при push в main
 
 ### Production
-- Kubernetes cluster (GKE/EKS/AKS)
-- Managed PostgreSQL (RDS/Cloud SQL)
-- CDN for frontend (Cloudflare)
-- SSL/TLS termination
-- Monitoring (Prometheus + Grafana)
-- Logging (ELK Stack)
+- Kubernetes кластер (GKE/EKS/AKS)
+- Управляемый PostgreSQL (RDS/Cloud SQL)
+- CDN для frontend (Cloudflare)
+- SSL/TLS терминация
+- Мониторинг (Prometheus + Grafana)
+- Логирование (ELK Stack)
 
 ---
 
-## 💡 Tips for Working on This Project
+## 💡 Советы для работы над проектом
 
-### Before Starting Work
-1. `docker-compose up` - Start services
-2. `/review-docs` - Check documentation status
-3. Read relevant ADR/spec if working on existing feature
-4. Check `docs/backlog/` for context
+### Перед началом работы
+1. `docker-compose up` - Запустить сервисы
+2. `/review-docs` - Проверить статус документации
+3. Прочитать соответствующие ADR/спецификации если работаете над существующей функцией
+4. Проверить `docs/backlog/` для контекста
 
-### While Working
-- Services auto-reload (uvicorn --reload, Vite HMR)
-- Use `/git-commit` for proper commit messages
-- Document as you go (`/log-dev`)
-- Test manually: http://localhost:3000
+### Во время работы
+- Сервисы автоматически перезагружаются (uvicorn --reload, Vite HMR)
+- Используйте `/git-commit` для правильных commit-сообщений
+- Документируйте по мере работы (`/log-dev`)
+- Тестируйте вручную: http://localhost:3000
 
-### Before Committing
-1. Run tests: `poetry run pytest && npm test`
-2. Format code: `poetry run black . && npm run lint`
-3. Update docs: `/log-change`, `/log-dev`
-4. Review: `/review-docs`
-5. Commit: `/git-commit`
+### Перед коммитом
+1. Запустить тесты: `poetry run pytest && npm test`
+2. Форматировать код: `poetry run black . && npm run lint`
+3. Обновить документацию: `/log-change`, `/log-dev`
+4. Обзор: `/review-docs`
+5. Коммит: `/git-commit`
 
-### When Stuck
-- Check `docs/architecture/` for system overview
-- Check `docs/specs/` for feature details
-- Use postgres-python-expert subagent for DB questions
-- Check dev journal for similar past issues
-- Google with project context (FastAPI + SQLAlchemy + Alembic)
+### Когда застряли
+- Проверьте `docs/architecture/` для обзора системы
+- Проверьте `docs/specs/` для деталей функций
+- Используйте субагент postgres-python-expert для вопросов о БД
+- Проверьте dev-журнал для похожих прошлых проблем
+- Google с контекстом проекта (FastAPI + SQLAlchemy + Alembic)
 
 ---
 
-## 📞 Resources
+## 📞 Ресурсы
 
-### Internal Documentation
-- Full architecture: `@docs/architecture/system-overview.md`
-- Tech stack details: `@docs/architecture/tech-stack.md`
-- Database schema: `@docs/architecture/database-schema.md`
-- Commands reference: `.claude/commands/README.md`
+### Внутренняя документация
+- Полная архитектура: `@docs/architecture/system-overview.md`
+- Детали технологического стека: `@docs/architecture/tech-stack.md`
+- Схема БД: `@docs/architecture/database-schema.md`
+- Справочник команд: `.claude/commands/README.md`
 
-### External Links
+### Внешние ссылки
 - FastAPI Docs: https://fastapi.tiangolo.com
 - SQLAlchemy Docs: https://docs.sqlalchemy.org
 - Alembic Docs: https://alembic.sqlalchemy.org
 - React Docs: https://react.dev
 - TailwindCSS Docs: https://tailwindcss.com
 
-### Project Links
+### Ссылки проекта
 - README: `README.md`
 - PRD (Russian): `PRD-ru.md`
 - CHANGELOG: `docs/CHANGELOG.md`
 
 ---
 
-**Remember**: This is a developer tool for developers. Focus on **developer experience**, **zero-config**, and **visual-first** design!
+**Помните**: Это инструмент для разработчиков. Фокус на **опыте разработчика**, **zero-config**, и **visual-first** дизайне!
 
-**Killer Feature**: Visual Alembic UI - First GUI for Alembic in 14 years! 🚀
+**Ключевая фича**: Visual Alembic UI - Первый GUI для Alembic за 14 лет! 🚀

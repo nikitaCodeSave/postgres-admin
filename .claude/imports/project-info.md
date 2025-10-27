@@ -1,15 +1,15 @@
-# Project Information - PostgreSQL Admin Dashboard
+# Информация о проекте - PostgreSQL Admin Dashboard
 
-## Project Identity
+## Идентификация проекта
 
-**Name**: PostgreSQL Admin Dashboard
-**Version**: v0.1.0 (POC Stage → MVP)
-**Status**: Active Development
-**License**: MIT
+**Название**: PostgreSQL Admin Dashboard
+**Версия**: v0.1.0 (POC → MVP)
+**Статус**: Активная разработка
+**Лицензия**: MIT
 
-## Mission
+## Миссия
 
-Первый в мире Visual UI для Alembic миграций - developer tool для Python-разработчиков работающих с PostgreSQL + SQLAlchemy + Alembic.
+Первый в мире Visual UI для Alembic миграций - developer tool для Python-разработчиков, работающих с PostgreSQL + SQLAlchemy + Alembic.
 
 ## Killer Feature
 
@@ -17,88 +17,88 @@
 
 **Проблема**: Разработчики вынуждены использовать CLI для каждой операции с миграциями.
 
-**Решение**: Beautiful web UI с timeline visualization, one-click apply/rollback, real-time status.
+**Решение**: Красивый web UI с timeline visualization, one-click apply/rollback, real-time status.
 
-## Target Audience
+## Целевая аудитория
 
-**Primary**: Python Backend Разработчики (Junior-Middle)
+**Основная**: Python Backend Разработчики (Junior-Middle)
 - Используют FastAPI / Flask / Django
 - SQLAlchemy + Alembic ежедневно
 - PostgreSQL в Docker
 - Стартапы без dedicated DBA
 
-**Market Size**: ~3M Python developers используют SQLAlchemy + Alembic
+**Размер рынка**: ~3M Python developers используют SQLAlchemy + Alembic
 
-## Project Structure
+## Структура проекта
 
 ```
 Postgresql/
 ├── backend/              # FastAPI backend
 │   ├── app/
 │   │   ├── routers/     # API endpoints
-│   │   ├── services/    # Business logic (AlembicService ⭐)
-│   │   ├── config.py    # Settings (Pydantic)
-│   │   └── main.py      # FastAPI app
-│   └── pyproject.toml   # Poetry dependencies
-│
+│   │   ├── services/    # Бизнес-логика (AlembicService ⭐)
+│   │   ├── config.py    # Настройки (Pydantic)
+│   │   └── main.py      # FastAPI приложение
+│   └── pyproject.toml   # Poetry зависимости
+
 ├── frontend/            # React + TypeScript frontend
 │   ├── src/
-│   │   ├── components/  # React components (MigrationsPage ⭐)
-│   │   ├── services/    # API client
-│   │   └── types/       # TypeScript types
-│   └── package.json     # npm dependencies
-│
-├── example_project/     # Demo project для тестирования
-│   ├── models/          # SQLAlchemy models
-│   └── alembic/         # Example migrations
-│
-├── docs/                # Comprehensive documentation
+│   │   ├── components/  # React компоненты (MigrationsPage ⭐)
+│   │   ├── services/    # API клиент
+│   │   └── types/       # TypeScript типы
+│   └── package.json     # npm зависимости
+
+├── example_project/     # Demo проект для тестирования
+│   ├── models/          # SQLAlchemy модели
+│   └── alembic/         # Примеры миграций
+
+├── docs/                # Комплексная документация
 │   ├── adr/            # Architecture Decision Records
 │   ├── backlog/        # Features, Bugs, Improvements
-│   ├── specs/          # Implemented features specs
-│   ├── dev-journal/    # Development journal
-│   ├── architecture/   # System design docs
-│   └── CHANGELOG.md    # Release history
-│
-├── .claude/            # Claude Code configuration
-│   ├── commands/       # 10 slash commands
-│   ├── agents/         # postgres-python-expert subagent
-│   └── imports/        # Modular CLAUDE.md components
-│
-└── docker-compose.yml  # Full stack orchestration
+│   ├── specs/          # Спецификации реализованных фич
+│   ├── dev-journal/    # Журнал разработки
+│   ├── architecture/   # Документация системного дизайна
+│   └── CHANGELOG.md    # История релизов
+
+├── .claude/            # Конфигурация Claude Code
+│   ├── commands/       # 10 слэш-команд
+│   ├── agents/         # postgres-python-expert субагент
+│   └── imports/        # Модульные компоненты CLAUDE.md
+
+└── docker-compose.yml  # Оркестрация всего стека
 ```
 
-## Key Directories to Know
+## Ключевые директории
 
-- **backend/app/services/alembic_service.py** - Core innovation: Python API wrapper над Alembic CLI
-- **frontend/src/components/MigrationsPage.tsx** - Visual Alembic UI implementation (350+ LOC)
-- **docs/** - 2000+ lines comprehensive documentation
-- **.claude/commands/** - 10 specialized workflow commands
+- **backend/app/services/alembic_service.py** - Основная инновация: Python API wrapper над Alembic CLI
+- **frontend/src/components/MigrationsPage.tsx** - Реализация Visual Alembic UI (350+ строк кода)
+- **docs/** - 2000+ строк комплексной документации
+- **.claude/commands/** - 10 специализированных команд для workflow
 
-## Development Philosophy
+## Философия разработки
 
 1. **Zero-Config**: `docker-compose up` и всё работает
 2. **Visual First**: Все операции через UI, не CLI
-3. **Developer Experience**: Dark theme, keyboard shortcuts, intuitive UX
+3. **Developer Experience**: Тёмная тема, keyboard shortcuts, интуитивный UX
 4. **Documentation-Driven**: Все решения документированы (ADR, specs, journal)
 5. **Best Practices**: Conventional commits, semantic versioning, Keep a Changelog
 
-## Current Roadmap
+## Текущий Roadmap
 
-### ✅ POC Complete (v0.1.0)
+### ✅ POC завершён (v0.1.0)
 - Visual Alembic UI
-- Migration timeline visualization
-- Apply/Rollback through UI
+- Визуализация timeline миграций
+- Apply/Rollback через UI
 - Docker Compose setup
 
-### 🔄 MVP In Progress (v0.2.0)
+### 🔄 MVP в процессе (v0.2.0)
 - Database Browser (CRUD через UI)
 - Query Editor с SQL highlighting
-- Schema visualization
-- Tests (pytest + vitest)
+- Визуализация схемы
+- Тесты (pytest + vitest)
 
-### 🔮 Future (v1.0.0)
-- ER diagram из SQLAlchemy models
+### 🔮 Будущее (v1.0.0)
+- ER диаграмма из SQLAlchemy models
 - ORM Code Generator (DB → SQLAlchemy)
-- Multi-database support
-- Team collaboration features
+- Multi-database поддержка
+- Team collaboration функции

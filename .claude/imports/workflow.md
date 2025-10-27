@@ -1,26 +1,26 @@
-# Development Workflow & Guidelines
+# Рабочий процесс разработки и руководства
 
 ## Git Workflow
 
-### Branch Strategy
+### Стратегия ветвления
 ```
-main (production-ready)
+main (готово к production)
   ├── feature/database-browser
   ├── feature/query-editor
   ├── fix/migration-rollback
   └── docs/update-readme
 ```
 
-**Branch naming**:
-- `feature/` - new functionality
-- `fix/` - bug fixes
-- `docs/` - documentation updates
-- `refactor/` - code refactoring
-- `test/` - test additions
+**Именование веток**:
+- `feature/` - новая функциональность
+- `fix/` - исправления багов
+- `docs/` - обновления документации
+- `refactor/` - рефакторинг кода
+- `test/` - добавление тестов
 
-### Commit Conventions (Conventional Commits)
+### Соглашения о коммитах (Conventional Commits)
 
-**Format**:
+**Формат**:
 ```
 <type>(<scope>): <subject>
 
@@ -29,7 +29,7 @@ main (production-ready)
 [optional footer]
 ```
 
-**Types**:
+**Типы**:
 - `feat` - новая функциональность
 - `fix` - исправление бага
 - `docs` - изменения документации
@@ -39,9 +39,9 @@ main (production-ready)
 - `test` - добавление тестов
 - `chore` - изменения в build, зависимостях, tooling
 
-**Scopes**: `backend`, `frontend`, `docs`, `docker`, `ci`
+**Области (Scopes)**: `backend`, `frontend`, `docs`, `docker`, `ci`
 
-**Examples**:
+**Примеры**:
 ```bash
 feat(backend): add AlembicService for migration management
 
@@ -54,440 +54,440 @@ refactor(backend): extract validation logic to separate module
 chore(deps): upgrade FastAPI to 0.119.1
 ```
 
-**Use /git-commit command** для помощи с форматированием!
+**Используйте команду /git-commit** для помощи с форматированием!
 
-### Pull Request Workflow
+### Процесс работы с Pull Request
 
-1. **Create feature branch**
+1. **Создать ветку для функциональности**
    ```bash
    git checkout -b feature/database-browser
    ```
 
-2. **Make changes and commit**
+2. **Внести изменения и закоммитить**
    ```bash
    git add .
-   /git-commit  # Use Claude Code command
+   /git-commit  # Использовать команду Claude Code
    ```
 
-3. **Push branch**
+3. **Отправить ветку**
    ```bash
    git push origin feature/database-browser
    ```
 
-4. **Create PR** (use GitHub CLI or `/create-pr` command planned)
+4. **Создать PR** (использовать GitHub CLI или планируемую команду `/create-pr`)
    ```bash
    gh pr create --title "feat(frontend): add database browser UI" \
      --body "Implements visual table browser with CRUD operations"
    ```
 
-5. **Review and merge**
-   - CI passes (tests, linting)
-   - Code review approved
-   - Squash and merge to main
+5. **Ревью и слияние**
+   - CI проходит (тесты, линтинг)
+   - Код-ревью одобрено
+   - Squash и merge в main
 
-## Development Cycle
+## Цикл разработки
 
-### 1. Planning Phase
+### 1. Фаза планирования
 
-**For New Features**:
+**Для новых функций**:
 ```bash
-# 1. Create feature specification
+# 1. Создать спецификацию функции
 /new-feature database-browser
 
-# 2. Document architectural decisions (if significant)
+# 2. Задокументировать архитектурные решения (если значительные)
 /add-decision use-react-query-for-caching
 
-# 3. Update backlog if needed
-# Edit docs/backlog/features/P1-database-browser.md
+# 3. Обновить бэклог при необходимости
+# Редактировать docs/backlog/features/P1-database-browser.md
 ```
 
-**Output**:
+**Результат**:
 - `docs/backlog/features/P1-feature-name.md`
-- `docs/adr/NNNN-decision-name.md` (if architectural)
+- `docs/adr/NNNN-decision-name.md` (если архитектурное решение)
 
-### 2. Development Phase
+### 2. Фаза разработки
 
-**Daily Workflow**:
+**Ежедневный рабочий процесс**:
 ```bash
-# Start Docker services
+# Запустить Docker сервисы
 docker-compose up
 
-# Make code changes...
-# Backend auto-reloads (uvicorn --reload)
-# Frontend auto-reloads (Vite HMR)
+# Вносить изменения в код...
+# Backend автоматически перезагружается (uvicorn --reload)
+# Frontend автоматически перезагружается (Vite HMR)
 
-# Test changes manually in browser
+# Тестировать изменения вручную в браузере
 # http://localhost:3000
 
-# Run automated tests (when available)
+# Запустить автоматические тесты (когда доступны)
 cd backend && poetry run pytest
 cd frontend && npm test
 ```
 
-**Code Quality Checks**:
+**Проверки качества кода**:
 ```bash
 # Backend
 cd backend
-poetry run black app/           # Format
-poetry run ruff check app/      # Lint
+poetry run black app/           # Форматирование
+poetry run ruff check app/      # Линтинг
 
 # Frontend
 cd frontend
 npm run lint                    # ESLint
-npx tsc --noEmit               # Type check
+npx tsc --noEmit               # Проверка типов
 ```
 
-### 3. Documentation Phase
+### 3. Фаза документирования
 
-**After Completing Feature**:
+**После завершения функции**:
 ```bash
-# 1. Create detailed specification
+# 1. Создать детальную спецификацию
 /create-spec database-browser
 
-# 2. Update CHANGELOG
+# 2. Обновить CHANGELOG
 /log-change
 
-# 3. Write dev journal entry
+# 3. Написать запись в журнале разработки
 /log-dev
 
-# 4. Update README if needed (manually)
+# 4. Обновить README при необходимости (вручную)
 ```
 
-**Output**:
+**Результат**:
 - `docs/specs/NNN-feature-name.md`
-- Updated `docs/CHANGELOG.md`
-- Entry in `docs/dev-journal/YYYY-MM.md`
+- Обновленный `docs/CHANGELOG.md`
+- Запись в `docs/dev-journal/YYYY-MM.md`
 
-### 4. Commit & Push
+### 4. Коммит и Push
 
 ```bash
-# Use conventional commit
+# Использовать conventional commit
 /git-commit
 
-# Or manually
+# Или вручную
 git commit -m "feat(backend): add database browser API endpoints"
 
 # Push
 git push origin feature/database-browser
 ```
 
-### 5. Review Phase
+### 5. Фаза ревью
 
 ```bash
-# Review documentation state
+# Проверить состояние документации
 /review-docs
 
-# Look for:
-# - Missing specs for implemented features
-# - Outdated ADRs
-# - Incomplete CHANGELOG entries
-# - Stale backlog items
+# Искать:
+# - Отсутствующие спецификации для реализованных функций
+# - Устаревшие ADR
+# - Неполные записи в CHANGELOG
+# - Устаревшие элементы бэклога
 ```
 
-## Bug Fix Workflow
+## Процесс исправления багов
 
-### 1. Report Bug
+### 1. Сообщить о баге
 ```bash
 /create-bug
 
-# Fill in:
-# - Severity: CRITICAL/HIGH/MEDIUM/LOW
-# - Description
-# - Steps to reproduce
-# - Expected vs actual behavior
+# Заполнить:
+# - Серьезность: CRITICAL/HIGH/MEDIUM/LOW
+# - Описание
+# - Шаги для воспроизведения
+# - Ожидаемое vs фактическое поведение
 ```
 
-**Output**: `docs/backlog/bugs/SEVERITY-bug-description.md`
+**Результат**: `docs/backlog/bugs/SEVERITY-bug-description.md`
 
-### 2. Fix Bug
+### 2. Исправить баг
 ```bash
-# Create fix branch
+# Создать ветку для исправления
 git checkout -b fix/migration-rollback-error
 
-# Make changes...
+# Внести изменения...
 
-# Test fix
+# Протестировать исправление
 poetry run pytest tests/test_alembic_service.py
 ```
 
-### 3. Document Fix
+### 3. Задокументировать исправление
 ```bash
-# Update CHANGELOG
+# Обновить CHANGELOG
 /log-change
-# Type: Fixed
+# Тип: Fixed
 
-# Log in dev journal
+# Записать в журнал разработки
 /log-dev
 
-# Commit
+# Закоммитить
 /git-commit
-# Type: fix
+# Тип: fix
 ```
 
-### 4. Close Bug Report
-- Move bug file to `docs/backlog/bugs/closed/` OR
-- Delete file and reference in commit message
+### 4. Закрыть отчет о баге
+- Переместить файл бага в `docs/backlog/bugs/closed/` ИЛИ
+- Удалить файл и сослаться в сообщении коммита
 
-## Improvement Workflow
+## Процесс улучшений
 
-### 1. Propose Improvement
+### 1. Предложить улучшение
 ```bash
 /create-improvement
 
-# Fill in:
-# - Area: ui/backend/devops/docs/performance/security
-# - Current state
-# - Proposed improvement
-# - Why it matters
+# Заполнить:
+# - Область: ui/backend/devops/docs/performance/security
+# - Текущее состояние
+# - Предлагаемое улучшение
+# - Почему это важно
 ```
 
-**Output**: `docs/backlog/improvements/area-improvement-name.md`
+**Результат**: `docs/backlog/improvements/area-improvement-name.md`
 
-### 2. Implement
-Similar to feature development
+### 2. Реализовать
+Аналогично разработке функций
 
-### 3. Document
+### 3. Задокументировать
 ```bash
-/log-change  # Type: Changed
+/log-change  # Тип: Changed
 /log-dev
-/git-commit  # Type: refactor or perf
+/git-commit  # Тип: refactor или perf
 ```
 
-## Release Workflow
+## Процесс релиза
 
-### Preparing Release
+### Подготовка релиза
 
 ```bash
-# 1. Review all changes
+# 1. Проверить все изменения
 /review-docs
 
-# 2. Ensure everything documented
-# Check:
-# - All features have specs
-# - CHANGELOG complete
-# - No pending "in progress" items
+# 2. Убедиться, что все задокументировано
+# Проверить:
+# - Все функции имеют спецификации
+# - CHANGELOG заполнен
+# - Нет незавершенных элементов "в процессе"
 
-# 3. Create release
+# 3. Создать релиз
 /create-release v0.2.0
 
-# This will:
-# - Move [Unreleased] → [0.2.0] in CHANGELOG
-# - Create git tag
-# - Push to remote
+# Это:
+# - Переместит [Unreleased] → [0.2.0] в CHANGELOG
+# - Создаст git тег
+# - Отправит на удаленный репозиторий
 ```
 
-### Version Numbering (Semantic Versioning)
+### Нумерация версий (Semantic Versioning)
 
-**Format**: `MAJOR.MINOR.PATCH`
+**Формат**: `MAJOR.MINOR.PATCH`
 
-- **MAJOR** (1.0.0) - Breaking changes
-- **MINOR** (0.2.0) - New features, backward compatible
-- **PATCH** (0.1.1) - Bug fixes, backward compatible
+- **MAJOR** (1.0.0) - Ломающие изменения
+- **MINOR** (0.2.0) - Новые функции, обратно совместимые
+- **PATCH** (0.1.1) - Исправления багов, обратно совместимые
 
-**Pre-release**: `0.2.0-alpha.1`, `0.2.0-beta.1`, `0.2.0-rc.1`
+**Пре-релиз**: `0.2.0-alpha.1`, `0.2.0-beta.1`, `0.2.0-rc.1`
 
-## Testing Strategy
+## Стратегия тестирования
 
-### Current (POC)
-- ⚠️ Manual testing only
-- ⚠️ No automated tests yet
+### Текущее состояние (POC)
+- ⚠️ Только ручное тестирование
+- ⚠️ Автоматических тестов пока нет
 
-### Planned (MVP)
+### Планируется (MVP)
 
-**Backend Tests** (pytest):
+**Тесты Backend** (pytest):
 ```bash
 cd backend
 
-# Run all tests
+# Запустить все тесты
 poetry run pytest
 
-# Run with coverage
+# Запустить с покрытием
 poetry run pytest --cov=app --cov-report=html
 
-# Run specific test
+# Запустить конкретный тест
 poetry run pytest tests/test_alembic_service.py -v
 ```
 
-**Frontend Tests** (Vitest):
+**Тесты Frontend** (Vitest):
 ```bash
 cd frontend
 
-# Run all tests
+# Запустить все тесты
 npm test
 
-# Run in watch mode
+# Запустить в режиме отслеживания
 npm run test:watch
 
-# Coverage
+# Покрытие
 npm run test:coverage
 ```
 
-**Integration Tests**:
+**Интеграционные тесты**:
 ```bash
-# Full stack test with Docker
+# Тест полного стека с Docker
 docker-compose up -d
 ./scripts/run-integration-tests.sh
 docker-compose down
 ```
 
-## Code Review Guidelines
+## Руководство по код-ревью
 
-### Reviewer Checklist
+### Чеклист ревьюера
 
-**Code Quality**:
-- [ ] Follows project code style
-- [ ] Type hints/types added
-- [ ] No unused imports
-- [ ] No console.log/print statements
-- [ ] Error handling present
+**Качество кода**:
+- [ ] Следует стилю кода проекта
+- [ ] Добавлены type hints/types
+- [ ] Нет неиспользуемых импортов
+- [ ] Нет console.log/print выражений
+- [ ] Присутствует обработка ошибок
 
-**Functionality**:
-- [ ] Solves the stated problem
-- [ ] Edge cases handled
-- [ ] No obvious bugs
-- [ ] Performance acceptable
+**Функциональность**:
+- [ ] Решает поставленную задачу
+- [ ] Обработаны крайние случаи
+- [ ] Нет очевидных багов
+- [ ] Приемлемая производительность
 
-**Testing**:
-- [ ] Tests added for new functionality
-- [ ] Tests pass
-- [ ] Manual testing done
+**Тестирование**:
+- [ ] Добавлены тесты для новой функциональности
+- [ ] Тесты проходят
+- [ ] Выполнено ручное тестирование
 
-**Documentation**:
-- [ ] CHANGELOG updated (`/log-change`)
-- [ ] ADR created if architectural (`/add-decision`)
-- [ ] Spec created if feature (`/create-spec`)
-- [ ] Code comments explain WHY
+**Документация**:
+- [ ] Обновлен CHANGELOG (`/log-change`)
+- [ ] Создан ADR если архитектурное (`/add-decision`)
+- [ ] Создана спецификация если функция (`/create-spec`)
+- [ ] Комментарии в коде объясняют ПОЧЕМУ
 
 **Git**:
-- [ ] Commit message follows conventions
-- [ ] PR description clear
-- [ ] Branch name appropriate
+- [ ] Сообщение коммита следует соглашениям
+- [ ] Описание PR четкое
+- [ ] Имя ветки подходящее
 
-### Author Checklist (Before Creating PR)
+### Чеклист автора (перед созданием PR)
 
 ```bash
-# 1. Self-review code
+# 1. Самостоятельно проверить код
 git diff main...feature/my-feature
 
-# 2. Run tests
+# 2. Запустить тесты
 poetry run pytest && npm test
 
-# 3. Check code quality
+# 3. Проверить качество кода
 poetry run black . && poetry run ruff check .
 npm run lint
 
-# 4. Update documentation
+# 4. Обновить документацию
 /log-change
 /log-dev
-/review-docs  # Check completeness
+/review-docs  # Проверить полноту
 
-# 5. Commit with good message
+# 5. Закоммитить с хорошим сообщением
 /git-commit
 
-# 6. Push and create PR
+# 6. Отправить и создать PR
 git push origin feature/my-feature
 gh pr create --fill
 ```
 
-## CI/CD (Planned)
+## CI/CD (Планируется)
 
 ### GitHub Actions Workflow
 
-**On Push to feature branches**:
-- Lint code (Black, Ruff, ESLint)
-- Type check (mypy, tsc)
-- Run tests (pytest, vitest)
-- Build Docker images (test)
+**При Push в feature ветки**:
+- Проверка кода (Black, Ruff, ESLint)
+- Проверка типов (mypy, tsc)
+- Запуск тестов (pytest, vitest)
+- Сборка Docker образов (тест)
 
-**On PR to main**:
-- All above checks
-- Integration tests
-- Deploy preview (planned)
+**При PR в main**:
+- Все вышеперечисленные проверки
+- Интеграционные тесты
+- Развертывание превью (планируется)
 
-**On Push to main**:
-- All above checks
-- Build production Docker images
-- Tag with version
-- Deploy to staging (planned)
+**При Push в main**:
+- Все вышеперечисленные проверки
+- Сборка production Docker образов
+- Тегирование версии
+- Развертывание на staging (планируется)
 
-**On Release Tag**:
-- Build production images
-- Push to Docker Hub
-- Create GitHub Release
-- Deploy to production (planned)
+**При Release Tag**:
+- Сборка production образов
+- Отправка в Docker Hub
+- Создание GitHub Release
+- Развертывание в production (планируется)
 
-## Slash Commands Quick Reference
+## Быстрая справка по Slash командам
 
-### Planning
-- `/new-feature [name]` - Plan new feature
-- `/add-decision` - Document architectural decision
+### Планирование
+- `/new-feature [name]` - Спланировать новую функцию
+- `/add-decision` - Задокументировать архитектурное решение
 
-### Development
-- `/git-commit` - Create conventional commit
-- `/create-bug` - Report bug
-- `/create-improvement` - Propose improvement
+### Разработка
+- `/git-commit` - Создать conventional commit
+- `/create-bug` - Сообщить о баге
+- `/create-improvement` - Предложить улучшение
 
-### Documentation
-- `/create-spec [name]` - Document implemented feature
-- `/log-change` - Update CHANGELOG
-- `/log-dev` - Dev journal entry
-- `/review-docs` - Documentation health check
+### Документация
+- `/create-spec [name]` - Задокументировать реализованную функцию
+- `/log-change` - Обновить CHANGELOG
+- `/log-dev` - Запись в журнале разработки
+- `/review-docs` - Проверка здоровья документации
 
-### Release
-- `/create-release [version]` - Prepare release
+### Релиз
+- `/create-release [version]` - Подготовить релиз
 
-## Subagents Usage
+## Использование подагентов
 
 ### postgres-python-expert
 
-**When to use**:
-- Working with SQLAlchemy models
-- Creating/modifying Alembic migrations
-- Database query optimization
-- PostgreSQL-specific features
-- asyncpg configuration
+**Когда использовать**:
+- Работа с SQLAlchemy моделями
+- Создание/изменение Alembic миграций
+- Оптимизация запросов к базе данных
+- PostgreSQL-специфичные функции
+- Настройка asyncpg
 
-**How to invoke** (through Claude Code):
+**Как вызвать** (через Claude Code):
 ```
-"Use postgres-python-expert subagent to create SQLAlchemy model for..."
+"Использовать субагент postgres-python-expert для создания SQLAlchemy модели для..."
 ```
 
-**Agent always starts with web search** for latest versions and best practices!
+**Агент всегда начинает с веб-поиска** для получения последних версий и лучших практик!
 
-## Best Practices Summary
+## Краткое изложение лучших практик
 
-✅ **DO**:
-- Use Docker for development
-- Follow conventional commits
-- Document architectural decisions (ADR)
-- Update CHANGELOG for all changes
-- Write dev journal entries
-- Run tests before committing
-- Type everything (Python + TypeScript)
-- Use slash commands for consistency
+✅ **ДЕЛАТЬ**:
+- Использовать Docker для разработки
+- Следовать conventional commits
+- Документировать архитектурные решения (ADR)
+- Обновлять CHANGELOG для всех изменений
+- Писать записи в журнале разработки
+- Запускать тесты перед коммитом
+- Типизировать все (Python + TypeScript)
+- Использовать slash команды для единообразия
 
-❌ **DON'T**:
-- Commit directly to main
-- Skip documentation
-- Leave console.log/print in code
-- Hardcode configuration
-- Write generic commit messages
-- Duplicate code
-- Ignore linting errors
-- Merge untested code
+❌ **НЕ ДЕЛАТЬ**:
+- Коммитить напрямую в main
+- Пропускать документацию
+- Оставлять console.log/print в коде
+- Хардкодить конфигурацию
+- Писать общие сообщения коммитов
+- Дублировать код
+- Игнорировать ошибки линтинга
+- Сливать непротестированный код
 
-## Communication
+## Коммуникация
 
-### Issues
-- Use GitHub Issues for bug reports
-- Label appropriately (bug, feature, documentation)
-- Reference in commits (`Fixes #123`)
+### Задачи (Issues)
+- Использовать GitHub Issues для отчетов о багах
+- Правильно помечать метками (bug, feature, documentation)
+- Ссылаться в коммитах (`Fixes #123`)
 
-### Discussions
-- Use GitHub Discussions for questions
-- Slack/Discord для quick questions (if available)
+### Обсуждения
+- Использовать GitHub Discussions для вопросов
+- Slack/Discord для быстрых вопросов (если доступно)
 
-### Documentation
-- Primary source: `docs/` folder
-- Secondary: Code comments
-- Tertiary: Git commit messages
+### Документация
+- Первичный источник: папка `docs/`
+- Вторичный: Комментарии в коде
+- Третичный: Сообщения git коммитов
