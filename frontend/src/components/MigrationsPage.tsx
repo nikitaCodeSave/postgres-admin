@@ -176,7 +176,7 @@ export default function MigrationsPage() {
             </div>
           ) : (
             <div className="space-y-3">
-              {migrations.map((migration, index) => (
+              {migrations.map((migration) => (
                 <div
                   key={migration.revision}
                   className={`p-4 rounded-lg border transition-all ${

@@ -1,0 +1,464 @@
+# CLAUDE.local.md - Personal Configuration Template
+
+> Copy this file to `CLAUDE.local.md` (gitignored) and customize for your personal preferences.
+> This file loads AFTER `CLAUDE.md`, so you can override team settings.
+
+**Purpose**: Personal preferences, local environment setup, individual workflow customizations
+
+**To use**:
+```bash
+cp CLAUDE.local.md.example CLAUDE.local.md
+# Edit CLAUDE.local.md with your preferences
+# Don't commit CLAUDE.local.md (it's gitignored)
+```
+
+---
+
+## 🧑‍💻 Personal Information
+
+### Your Details
+```markdown
+Developer: [Your Name]
+Role: [Backend/Frontend/Full-Stack]
+Timezone: [Your Timezone]
+Preferred Language: [English/Russian/etc]
+```
+
+---
+
+## ⚙️ Local Environment Setup
+
+### Your Machine Configuration
+```bash
+# OS
+OS: [macOS/Linux/Windows]
+Architecture: [arm64/x86_64]
+
+# Docker
+Docker Desktop: [Yes/No]
+Docker Compose Version: [e.g., 2.23.0]
+
+# Ports (if different from defaults)
+Frontend Port: [3000]
+Backend Port: [8000]
+PostgreSQL Port: [5432]
+```
+
+### Local Paths
+```bash
+# If you use different paths
+PROJECTS_DIR=/path/to/your/projects
+PYTHON_PATH=/path/to/your/python
+NODE_PATH=/path/to/your/node
+```
+
+---
+
+## 🎨 Personal Code Style Preferences
+
+### Python Preferences
+```python
+# If you prefer different from team defaults
+
+# Line length (team default: 100)
+# line_length = 120
+
+# Import order (if you have personal preferences)
+# isort style: black, google, etc.
+
+# Type hints verbosity
+# prefer_explicit_types = True
+```
+
+### TypeScript Preferences
+```typescript
+// Formatting preferences
+
+// Semicolons (team uses them, but you can note preference)
+// prefer_no_semicolons = false
+
+// Quote style (team uses single)
+// prefer_double_quotes = false
+```
+
+---
+
+## 🔧 Personal Aliases & Shortcuts
+
+### Bash Aliases (add to ~/.bashrc or ~/.zshrc)
+```bash
+# Project-specific aliases
+alias pgadmin='cd ~/PROJECTS/Postgresql'
+alias pgup='docker-compose up'
+alias pgdown='docker-compose down'
+alias pgclean='docker-compose down -v'
+alias pglogs='docker-compose logs -f'
+
+# Backend shortcuts
+alias pgbe='cd ~/PROJECTS/Postgresql/backend'
+alias pgtest='cd ~/PROJECTS/Postgresql/backend && poetry run pytest'
+alias pglint='cd ~/PROJECTS/Postgresql/backend && poetry run ruff check .'
+
+# Frontend shortcuts
+alias pgfe='cd ~/PROJECTS/Postgresql/frontend'
+alias pgdev='cd ~/PROJECTS/Postgresql/frontend && npm run dev'
+
+# Git shortcuts
+alias gs='git status'
+alias gd='git diff'
+alias gl='git log --oneline -10'
+alias gp='git push'
+```
+
+### Fish Aliases (if you use Fish shell)
+```fish
+# Add to ~/.config/fish/config.fish
+abbr pgadmin 'cd ~/PROJECTS/Postgresql'
+abbr pgup 'docker-compose up'
+# etc...
+```
+
+---
+
+## 🛠️ Personal Development Tools
+
+### Your Preferred Editor/IDE
+```markdown
+Editor: [VS Code / Cursor / Zed / Vim / etc]
+Extensions:
+- [Extension 1]
+- [Extension 2]
+- ...
+
+Font: [Fira Code / JetBrains Mono / etc]
+Theme: [One Dark Pro / etc]
+```
+
+### Your Testing Preferences
+```bash
+# How you prefer to run tests
+TEST_VERBOSE=true              # Always verbose
+TEST_COVERAGE=true             # Always with coverage
+TEST_PARALLEL=4                # Parallel test workers
+```
+
+### Your Debugging Setup
+```bash
+# Debugger preferences
+DEBUGGER=[pdb / ipdb / VS Code debugger]
+BREAKPOINT_STYLE=[pdb.set_trace() / breakpoint()]
+```
+
+---
+
+## 📝 Personal Workflow Notes
+
+### Your Daily Routine
+```markdown
+Morning:
+1. [Pull latest from main]
+2. [Review overnight changes]
+3. [Check Slack/Discord]
+4. [Plan tasks in backlog]
+
+During Development:
+- [Save frequently]
+- [Test in browser after each change]
+- [Commit every 30 minutes]
+
+Evening:
+- [Run full test suite]
+- [Update dev journal]
+- [Push commits]
+```
+
+### Your Commit Message Template
+```bash
+# If you have personal template preferences beyond conventional commits
+
+# Example:
+# feat(backend): add feature
+#
+# - Detail 1
+# - Detail 2
+#
+# Refs: #123
+# Time: 2h
+```
+
+---
+
+## 🧪 Personal Testing Strategy
+
+### What You Test Manually
+```markdown
+Before Every Commit:
+- [ ] [Specific test case 1]
+- [ ] [Specific test case 2]
+- [ ] [Check console for errors]
+- [ ] [Test in Chrome + Firefox]
+```
+
+### Your Test Data
+```bash
+# Personal test accounts, if any
+TEST_USER_EMAIL=your.test@example.com
+TEST_DB_NAME=your_test_db
+```
+
+---
+
+## 💡 Personal Learning Notes
+
+### Areas You're Learning
+```markdown
+Currently Learning:
+- [Alembic advanced features]
+- [React Query]
+- [PostgreSQL optimization]
+
+Want to Explore:
+- [Feature X]
+- [Technology Y]
+```
+
+### Personal Code Snippets
+```python
+# Your frequently used snippets
+
+# Debug print with timestamp
+import datetime
+def debug(msg):
+    print(f"[{datetime.datetime.now()}] {msg}")
+```
+
+```typescript
+// Your TS helpers
+const log = (msg: string) => console.log(`[DEV] ${msg}`);
+```
+
+---
+
+## 🎯 Personal Goals for This Project
+
+### What You Want to Accomplish
+```markdown
+Short-term (this week):
+- [ ] [Goal 1]
+- [ ] [Goal 2]
+
+Medium-term (this month):
+- [ ] [Goal 1]
+- [ ] [Goal 2]
+
+Long-term:
+- [ ] [Master Alembic internals]
+- [ ] [Contribute significant feature]
+```
+
+---
+
+## 🔍 Personal Debugging Tips
+
+### Issues You've Encountered
+```markdown
+Common Issues You Face:
+1. [Issue description]
+   Solution: [What worked for you]
+
+2. [Another issue]
+   Solution: [Your fix]
+```
+
+### Your Debugging Process
+```markdown
+When Something Breaks:
+1. [Check Docker logs first]
+2. [Clear browser cache]
+3. [Restart Docker containers]
+4. [Check database state]
+5. [Read error message carefully]
+```
+
+---
+
+## 📚 Personal Reference Links
+
+### Bookmarks You Use Often
+```markdown
+Quick Reference:
+- [SQLAlchemy cheat sheet URL]
+- [React hooks reference]
+- [Your blog post about X]
+- [StackOverflow answer that helped]
+
+Your Articles/Notes:
+- [Personal blog post]
+- [Notion page with notes]
+```
+
+---
+
+## 🎨 Personal UI Preferences
+
+### If You Want Different Theme/Colors
+```css
+/* Personal color preferences for local dev */
+--my-primary-color: #your-color;
+--my-font-size: 16px;
+```
+
+### Your Browser Extensions
+```markdown
+Extensions I Use for Dev:
+- [React DevTools]
+- [Redux DevTools]
+- [Your specific extension]
+```
+
+---
+
+## 🔐 Personal Security Notes
+
+### Your Security Practices
+```markdown
+Before Commits:
+- [ ] [Check for exposed secrets]
+- [ ] [Review .env files]
+- [ ] [Scan with git-secrets]
+
+Local Security:
+- [Using 1Password for credentials]
+- [Never commit .env files]
+```
+
+---
+
+## 🚀 Personal Productivity Hacks
+
+### What Makes You More Productive
+```markdown
+Your Productivity Tips:
+- [Use Pomodoro 25min sessions]
+- [Write tests first]
+- [Document while coding]
+- [Take breaks every hour]
+
+Your Focus Music:
+- [Spotify playlist]
+- [YouTube channel]
+```
+
+### Your Time Tracking
+```bash
+# If you track time
+TIME_TRACKER=[Toggl / Clockify / etc]
+PROJECT_ID=postgresql-admin-dashboard
+```
+
+---
+
+## 📝 Personal Documentation Style
+
+### How You Like to Document
+```markdown
+Comments Style:
+- [Prefer inline comments for complex logic]
+- [Docstrings for all public functions]
+- [Markdown for design decisions]
+
+Documentation Frequency:
+- [After every feature]
+- [Daily dev journal entries]
+- [Weekly architecture reviews]
+```
+
+---
+
+## 🤝 Personal Collaboration Preferences
+
+### How You Prefer to Collaborate
+```markdown
+Code Review:
+- [Prefer detailed reviews]
+- [Like inline comments]
+- [Appreciate learning opportunities]
+
+Communication:
+- [Async-first]
+- [Prefer Slack over email]
+- [Available 9-5 your timezone]
+```
+
+---
+
+## ⚡ Personal Performance Preferences
+
+### Your Machine Specs
+```markdown
+Machine:
+- CPU: [Your CPU]
+- RAM: [Your RAM]
+- SSD: [Yes/No]
+
+Docker Resources:
+- CPUs: [4]
+- Memory: [8GB]
+- Swap: [2GB]
+```
+
+### Performance Monitoring
+```bash
+# Tools you use to monitor performance
+PERF_TOOLS=[htop / Activity Monitor / Windows Task Manager]
+```
+
+---
+
+## 🎓 Personal Learning Resources
+
+### Courses/Books You're Using
+```markdown
+Currently Reading:
+- [Book/Course name]
+
+Want to Read:
+- [Resource name]
+
+Your Notes:
+- [Link to your notes]
+```
+
+---
+
+## 💬 Notes to Self
+
+### Reminders
+```markdown
+Remember to:
+- [Your personal reminder 1]
+- [Your personal reminder 2]
+
+Don't Forget:
+- [Important thing you tend to forget]
+```
+
+---
+
+## 🎉 Personal Achievements
+
+### Track Your Progress
+```markdown
+Completed:
+- [Date] - [Achievement]
+- [Date] - [Another achievement]
+
+Proud Of:
+- [Something you're proud of]
+```
+
+---
+
+**Remember**: This file is PERSONAL and gitignored. Customize freely!
+
+**Pro Tip**: Use this file to document things specific to YOUR workflow, not the team's workflow.

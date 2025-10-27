@@ -271,10 +271,27 @@ alembic revision --autogenerate -m "add new column"
 
 ## 📚 Документация
 
+### Основная документация
 - [PRD (Product Requirements Document)](./PRD-ru.md) - полная спецификация продукта
 - [IDEA-CARD](./IDEA-CARD.md) - формулировка идеи
 - [Backend README](./backend/README.md) - документация backend API
 - [Frontend README](./frontend/README.md) - документация frontend UI
+
+### Структурированная документация (`docs/`)
+- **ADR** (`docs/adr/`) - Architecture Decision Records (архитектурные решения)
+- **Specs** (`docs/specs/`) - Спецификации реализованных фич
+- **Backlog** (`docs/backlog/`) - Planning: features, bugs, improvements
+- **Dev Journal** (`docs/dev-journal/`) - Журнал разработки
+- **Architecture** (`docs/architecture/`) - System design, DB schema, tech stack
+- **CHANGELOG** (`docs/CHANGELOG.md`) - История изменений по релизам
+
+### Claude Code Configuration
+- **CLAUDE.md** - Конфигурация для Claude Code AI (автоматически загружается)
+- **CLAUDE.local.md.example** - Template для personal настроек
+- **Slash Commands** (`.claude/commands/`) - 10 команд для workflow automation
+- **Subagents** (`.claude/agents/`) - Specialized AI agents (postgres-python-expert)
+
+**Работаешь с Claude Code?** Все настройки и команды уже преднастроены! Просто начни работу.
 
 ## 🤝 Contributing
 

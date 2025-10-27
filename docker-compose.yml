@@ -1,63 +1,128 @@
-version: '3.8'
+# ============================================
+# Docker Compose конфигурация
+# ============================================
+# ВАЖНО: Поле 'version' больше не используется в Docker Compose v2+
+# Docker автоматически использует последнюю версию спецификации
 
+# Секция services определяет все контейнеры, которые будут запущены
 services:
-  # PostgreSQL Database
+  
+  # ============================================
+  # PostgreSQL Database - База данных
+  # ============================================
   postgres:
+    # image - готовый образ из Docker Hub
+    # postgres:17-alpine - PostgreSQL версии 17 на базе Alpine Linux (легковесная версия)
     image: postgres:17-alpine
+    
+    # container_name - имя контейнера (для удобства обращения)
+    # По умолчанию Docker создаёт имена автоматически
     container_name: pg-admin-postgres
+    
+    # environment - переменные окружения внутри контейнера
+    # Эти переменные настраивают PostgreSQL при первом запуске
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: testdb
+      POSTGRES_USER: postgres      # Имя пользователя БД
+      POSTGRES_PASSWORD: postgres  # Пароль (⚠️ в продакшене используйте secrets!)
+      POSTGRES_DB: testdb          # Имя базы данных, которая будет создана
+    
+    # ports - проброс портов: "хост:контейнер"
+    # Позволяет подключаться к БД с вашего компьютера через localhost:5432
     ports:
       - "5432:5432"
+    
+    # volumes - постоянное хранилище данных
+    # Данные БД сохраняются даже после удаления контейнера
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data  # named volume -> путь внутри контейнера
+    
+    # healthcheck - проверка здоровья контейнера
+    # Docker будет проверять, готова ли БД принимать подключения
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+      test: ["CMD-SHELL", "pg_isready -U postgres"]  # Команда проверки
+      interval: 5s   # Проверять каждые 5 секунд
+      timeout: 5s    # Ждать ответ максимум 5 секунд
+      retries: 5     # Попыток перед тем как признать unhealthy
 
-  # Backend API (FastAPI)
+  # ============================================
+  # Backend API - Бэкенд на FastAPI
+  # ============================================
   backend:
+    # build - собрать образ из Dockerfile (вместо использования готового image)
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: ./backend        # Директория с исходным кодом
+      dockerfile: Dockerfile    # Имя Dockerfile (можно опустить, это значение по умолчанию)
+    
     container_name: pg-admin-backend
+    
+    # Пробрасываем порт 8000 для доступа к API
     ports:
       - "8000:8000"
+    
+    # Переменные окружения для настройки бэкенда
     environment:
+      # URL подключения к БД: протокол://пользователь:пароль@хост:порт/база
+      # ВАЖНО: используем имя сервиса 'postgres' как hostname (Docker DNS)
       DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/testdb
       ALEMBIC_INI_PATH: /app/alembic/alembic.ini
       SQLALCHEMY_BASE: models.base:Base
-      API_HOST: 0.0.0.0
+      API_HOST: 0.0.0.0          # Слушать на всех интерфейсах
       API_PORT: 8000
-      DEBUG: "true"
+      DEBUG: "true"              # Режим отладки (⚠️ отключите в продакшене!)
+      # CORS - разрешённые источники для кросс-доменных запросов
       CORS_ORIGINS: http://localhost:3000,http://localhost:5173
+    
+    # volumes - монтирование директорий с хоста в контейнер
+    # Изменения в файлах на хосте сразу видны в контейнере (удобно для разработки)
     volumes:
-      # Mount example project for testing
+      # :ro = read-only (только чтение, запись запрещена)
       - ./example_project/models:/app/models:ro
       - ./example_project/alembic:/app/alembic:ro
+    
+    # depends_on - зависимости между сервисами
+    # Backend запустится только после того, как postgres станет healthy
     depends_on:
       postgres:
-        condition: service_healthy
+        condition: service_healthy  # Ждём не просто запуска, а готовности БД
+    
+    # command - переопределяет CMD из Dockerfile
+    # --reload автоматически перезагружает сервер при изменении кода
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
-  # Frontend UI (React + Vite)
+  # ============================================
+  # Frontend UI - Фронтенд на React + Vite
+  # ============================================
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    
     container_name: pg-admin-frontend
+    
+    # Порт для доступа к веб-интерфейсу
     ports:
       - "3000:3000"
+    
+    # URL бэкенда для API запросов
+    # Используем localhost, так как обращаемся из браузера (не из контейнера)
     environment:
       VITE_API_URL: http://localhost:8000
+    
+    # Зависимость: сначала должен запуститься backend
     depends_on:
       - backend
+    
+    # stdin_open и tty нужны для некоторых инструментов разработки
+    # Позволяют интерактивное взаимодействие с контейнером
     stdin_open: true
     tty: true
 
+# ============================================
+# Volumes - именованные хранилища данных
+# ============================================
+# Named volumes управляются Docker и сохраняются между перезапусками
 volumes:
-  postgres_data:
+  postgres_data:  # Здесь будут храниться данные PostgreSQL
+    # Docker создаст volume автоматически
+    # Данные сохранятся даже после 'docker-compose down'
+    # Удалить можно только командой 'docker-compose down -v'
